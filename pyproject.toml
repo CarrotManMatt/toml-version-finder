@@ -1,183 +1,155 @@
-[project]
-name = "toml-version-finder"
-version = "0.0.1"
-requires-python = ">=3.12"
-dependencies = [
-    "starlette",
-    "uvicorn-worker",
-    "gunicorn",
-    "gidgethub",
-]
-
-[tool.uv]
-dev-dependencies = [
-    "pre-commit",
-    "yamllint",
+[dependency-groups]
+dev = [
     "uvicorn",
-    "mypy>=1.12",
-    "ruff>=0.4",
+    { include-group = "lint-format" },
+    { include-group = "pre-commit" },
+    { include-group = "type-check" },
 ]
+lint-format = ["ruff>=0.4"]
+pre-commit = ["pre-commit"]
+type-check = ["mypy>=1.12"]
+
+[project] # TODO: Remove [project] table once https://github.com/astral-sh/uv/issues/8582 is completed
+authors = [{ name = "Matt Norton", email = "matt@carrotmanmatt.com" }]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Environment :: Web Environment",
+    "License :: OSI Approved :: Apache Software License",
+    "Natural Language :: English",
+    "Operating System :: OS Independent",
+    "Private :: Do Not Upload",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Topic :: Internet",
+    "Typing :: Typed",
+]
+dependencies = [
+    "aiohttp",
+    "gidgethub",
+    "gunicorn",
+    "packaging",
+    "starlette",
+    "typed_classproperties>=1.1",
+    "uvicorn-worker",
+]
+license = "Apache-2.0"
+license-files = ["LICENSE"]
+name = "toml-version-finder"
+requires-python = ">=3.12"
+version = "1.0.0"
+
+[project.urls]
+Repository = "https://github.com/CarrotManMatt/toml-version-finder"
 
 
 [tool.mypy]
-exclude = ["venv/", "examples/"]
-extra_checks = true
-warn_unused_configs = true
-disallow_untyped_calls = true
-disallow_untyped_defs = true
 check_untyped_defs = true
-disallow_any_generics = true
-disallow_any_unimported = true
 disallow_any_decorated = true
 disallow_any_explicit = true
-disallow_subclassing_any = true
-disallow_untyped_decorators = true
+disallow_any_generics = true
+disallow_any_unimported = true
 disallow_incomplete_defs = true
-warn_redundant_casts = true
-warn_unused_ignores = true
-warn_return_any = true
+disallow_subclassing_any = true
+disallow_untyped_calls = true
+disallow_untyped_decorators = true
+disallow_untyped_defs = true
+extra_checks = true
 no_implicit_reexport = true
 strict_equality = true
+warn_redundant_casts = true
+warn_return_any = true
 warn_unreachable = true
+warn_unused_configs = true
+warn_unused_ignores = true
+
+[[tool.mypy.overrides]]
+ignore_missing_imports = true
+module = ["aiohttp"]
 
 
 [tool.ruff]
-output-format = "concise"
+indent-width = 4
 line-length = 95
-target-version ="py312"
-extend-exclude = [
-    "venv/",
-    "examples/",
-    ".vscode",
-    ".idea",
-    ".pytest_cache",
-    ".mypy_cache",
-    ".ruff_cache",
-    "__pycache__",
-]
+output-format = "concise"
+
+[tool.ruff.format]
+docstring-code-format = true
+indent-style = "space"
+line-ending = "lf"
+quote-style = "double"
 
 [tool.ruff.lint]
-select = [
-    "E",
-    "F",
-    "W",
-    "C",
-    "I",
-    "N",
-    "D",
-    "UP",
-    "YTT",
-    "ANN",
-    "ASYNC",
-    "S",
-    "BLE",
-    "FBT",
-    "B",
-    "A",
-    "COM",
-    "DTZ",
-    "T",
-    "EM",
-    "EXE",
-    "ISC",
-    "ICN",
-    "LOG",
-    "G",
-    "INP",
-    "PIE",
-    "PYI",
-    "PT",
-    "Q",
-    "RSE",
-    "RET",
-    "SLF",
-    "SLOT",
-    "SIM",
-    "TID",
-    "TCH",
-    "INT",
-    "ARG",
-    "PTH",
-    "TD",
-    "FIX",
-    "ERA",
-    "PGH",
-    "PL",
-    "TRY",
-    "FLY",
-    "PERF",
-    "FURB",
-    "DOC",
-    "RUF",
-]
-fixable = [
-    "I001",
-    "TCH",
-    "F401",
-    "F541",
-    "F632",
-    "F811",
-    "F901",
-    "E2",
-    "E3",
-    "E401",
-    "E502",
-    "E703",
-    "E71",
-    "W29",
-    "W391",
-    "D2",
-    "D3",
-    "D400",
-    "D406",
-    "D415",
-    "UP",
-    "YTT",
-    "B004",
-    "EXE004",
-    "G010",
-    "PIE",
-    "PYI009",
-]
 ignore = [
-    "D203",
+    "C90",
+    "COM812",
+    "COM819",
+    "CPY",
+    "D206",
     "D212",
+    "DJ",
+    "FA",
+    "FAST",
+    "INP001",
+    "ISC001",
+    "ISC002",
     "N806",
-    "S603",
-    "ANN101",
-    "ANN102",
+    "PD",
+    "PIE808",
+    "Q000",
+    "Q001",
+    "Q002",
     "Q003",
+    "S603",
+    "SIM910",
     "TD002",
     "TD003",
-    "SIM910",
-    "PIE808",
+    "W191",
 ]
-task-tags = [
-    "TODO",
-    "FIXME",
-    "HACK",
-    "BUG",
-    "NOBUG",
-    "REQ",
-    "IDEA",
-    "NOTE",
-    "ISSUE",
-    "DONE",
+select = ["ALL", "D204", "D213", "D401"]
+task-tags = ["BUG", "DONE", "FIXME", "HACK", "IDEA", "ISSUE", "NOBUG", "NOTE", "REQ", "TODO"]
+
+[tool.ruff.lint.flake8-type-checking]
+quote-annotations = true
+strict = true
+
+[tool.ruff.lint.pep8-naming]
+classmethod-decorators = [
+    "typed_classproperties.cached_classproperty",
+    "typed_classproperties.classproperty",
 ]
-external = ["CAR", "TXB"]
-
-[tool.ruff.lint.flake8-pytest-style]
-parametrize-values-type = "tuple"
-
-[tool.ruff.lint.mccabe]
-max-complexity = 18
+extend-ignore-names = [
+    "BROKEN_*_MESSAGE",
+    "DEFAULT_MESSAGE",
+    "INVALID_*_MESSAGE",
+    "NO_*_MESSAGE",
+    "STATUS_CODE",
+    "_BaseCustomException",
+]
 
 [tool.ruff.lint.pycodestyle]
 ignore-overlong-task-comments = true
 max-doc-length = 95
 
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+property-decorators = [
+    "typed_classproperties.cached_classproperty",
+    "typed_classproperties.classproperty",
+]
+
 [tool.ruff.lint.pylint]
-allow-magic-value-types = ["str", "bytes", "int"]
+allow-magic-value-types = ["bytes", "int", "str"]
 max-args = 7
-max-returns = 10
 max-branches = 19
+max-returns = 10
+
+[tool.ruff.lint.pyupgrade]
+keep-runtime-typing = true
+
+[tool.uv]
+default-groups = ["dev"]
+no-binary-package = ["toml-version-finder"]
+no-build = true
+package = false

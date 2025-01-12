@@ -1,0 +1,96 @@
+default_install_hook_types: [pre-commit, commit-msg]
+default_stages: [pre-commit, pre-merge-commit, manual]
+
+default_language_version:
+    python: python3.13
+
+repos:
+    - repo: https://github.com/renovatebot/pre-commit-hooks
+      rev: 39.100.1
+      hooks:
+        - id: renovate-config-validator
+          args: [--strict]
+
+    - repo: https://github.com/python-jsonschema/check-jsonschema
+      rev: 0.31.0
+      hooks:
+        - id: check-github-workflows
+
+    - repo: https://github.com/jorisroovers/gitlint
+      rev: v0.19.1
+      hooks:
+        - id: gitlint
+        - id: gitlint-ci
+
+    - repo: https://github.com/gitleaks/gitleaks
+      rev: v8.22.1
+      hooks:
+        - id: gitleaks
+
+    - repo: https://github.com/pre-commit/pre-commit-hooks
+      rev: v5.0.0
+      hooks:
+        - id: check-added-large-files
+        - id: trailing-whitespace
+        - id: check-executables-have-shebangs
+        - id: check-illegal-windows-names
+        - id: check-shebang-scripts-are-executable
+        - id: check-json
+        - id: check-xml
+        - id: check-symlinks
+        - id: check-merge-conflict
+        - id: check-vcs-permalinks
+        - id: destroyed-symlinks
+        - id: mixed-line-ending
+          args: [--fix=lf]
+        - id: check-case-conflict
+        - id: detect-private-key
+        - id: fix-byte-order-marker
+          args: [-h]
+        - id: name-tests-test
+          args: [--pytest-test-first]
+        - id: pretty-format-json
+          args: [--autofix, --indent, '4']
+
+    - repo: https://github.com/macisamuele/language-formatters-pre-commit-hooks
+      rev: v2.14.0
+      hooks:
+        - id: pretty-format-ini
+          args: [--autofix]
+
+    - repo: https://github.com/ComPWA/taplo-pre-commit
+      rev: v0.9.3
+      hooks:
+        - id: taplo-format
+
+        - id: taplo-lint
+          args: [--default-schema-catalogs]
+          stages: [manual]
+
+    - repo: https://github.com/djlint/djLint
+      rev: v1.36.4
+      hooks:
+        - id: djlint-reformat-django
+          args: [--configuration, .build_and_deploy/pyproject.toml]
+        - id: djlint-django
+          args: [--configuration, .build_and_deploy/pyproject.toml]
+
+    - repo: https://github.com/astral-sh/ruff-pre-commit
+      rev: v0.9.1
+      hooks:
+        - id: ruff
+          args: [--fix]
+
+        - id: ruff-format
+
+    - repo: https://github.com/astral-sh/uv-pre-commit
+      rev: 0.5.17
+      hooks:
+        - id: uv-lock
+          always_run: true
+          args: [--project, .build_and_deploy]
+
+    - repo: https://github.com/google/yamlfmt
+      rev: v0.15.0
+      hooks:
+        - id: yamlfmt
