@@ -67,14 +67,6 @@ repos:
           args: [--default-schema-catalogs]
           stages: [manual]
 
-    - repo: https://github.com/djlint/djLint
-      rev: v1.36.4
-      hooks:
-        - id: djlint-reformat-django
-          args: [--configuration, .build_and_deploy/pyproject.toml]
-        - id: djlint-django
-          args: [--configuration, .build_and_deploy/pyproject.toml]
-
     - repo: https://github.com/astral-sh/ruff-pre-commit
       rev: v0.9.1
       hooks:

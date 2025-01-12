@@ -551,17 +551,12 @@ wheels = [
 name = "toml-version-finder"
 version = "1.0.0"
 source = { virtual = "." }
-dependencies = [
-    { name = "aiohttp" },
-    { name = "gidgethub" },
-    { name = "gunicorn" },
-    { name = "packaging" },
-    { name = "starlette" },
-    { name = "typed-classproperties" },
-    { name = "uvicorn-worker" },
-]
 
 [package.dev-dependencies]
+deploy = [
+    { name = "gunicorn" },
+    { name = "uvicorn-worker" },
+]
 dev = [
     { name = "mypy" },
     { name = "pre-commit" },
@@ -571,6 +566,13 @@ dev = [
 lint-format = [
     { name = "ruff" },
 ]
+main = [
+    { name = "aiohttp" },
+    { name = "gidgethub" },
+    { name = "packaging" },
+    { name = "starlette" },
+    { name = "typed-classproperties" },
+]
 pre-commit = [
     { name = "pre-commit" },
 ]
@@ -579,17 +581,12 @@ type-check = [
 ]
 
 [package.metadata]
-requires-dist = [
-    { name = "aiohttp" },
-    { name = "gidgethub" },
-    { name = "gunicorn" },
-    { name = "packaging" },
-    { name = "starlette" },
-    { name = "typed-classproperties", specifier = ">=1.1" },
-    { name = "uvicorn-worker" },
-]
 
 [package.metadata.requires-dev]
+deploy = [
+    { name = "gunicorn" },
+    { name = "uvicorn-worker" },
+]
 dev = [
     { name = "mypy", specifier = ">=1.12" },
     { name = "pre-commit" },
@@ -597,6 +594,13 @@ dev = [
     { name = "uvicorn" },
 ]
 lint-format = [{ name = "ruff", specifier = ">=0.4" }]
+main = [
+    { name = "aiohttp" },
+    { name = "gidgethub" },
+    { name = "packaging" },
+    { name = "starlette" },
+    { name = "typed-classproperties", specifier = ">=1.1" },
+]
 pre-commit = [{ name = "pre-commit" }]
 type-check = [{ name = "mypy", specifier = ">=1.12" }]
 

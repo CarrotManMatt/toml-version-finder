@@ -80,9 +80,7 @@ async def _toml_find_version_endpoint(request: "Request") -> "Response":
     )
 
 
-def _gidgethub_exception_handler(
-    _request: "Request", exc: gidgethub.GitHubException
-) -> "Response":
+def _gidgethub_exception_handler(_request: "Request", exc: Exception) -> "Response":
     return PlainTextResponse(f"GitHub: {exc}", status_code=502)
 
 

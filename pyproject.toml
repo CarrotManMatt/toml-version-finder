@@ -1,4 +1,5 @@
 [dependency-groups]
+deploy = ["gunicorn", "uvicorn-worker"]
 dev = [
     "uvicorn",
     { include-group = "lint-format" },
@@ -6,42 +7,14 @@ dev = [
     { include-group = "type-check" },
 ]
 lint-format = ["ruff>=0.4"]
+main = ["aiohttp", "gidgethub", "packaging", "starlette", "typed_classproperties>=1.1"]
 pre-commit = ["pre-commit"]
 type-check = ["mypy>=1.12"]
 
 [project] # TODO: Remove [project] table once https://github.com/astral-sh/uv/issues/8582 is completed
-authors = [{ name = "Matt Norton", email = "matt@carrotmanmatt.com" }]
-classifiers = [
-    "Development Status :: 5 - Production/Stable",
-    "Environment :: Web Environment",
-    "License :: OSI Approved :: Apache Software License",
-    "Natural Language :: English",
-    "Operating System :: OS Independent",
-    "Private :: Do Not Upload",
-    "Programming Language :: Python :: 3 :: Only",
-    "Programming Language :: Python :: 3.12",
-    "Programming Language :: Python :: 3.13",
-    "Programming Language :: Python :: 3.14",
-    "Topic :: Internet",
-    "Typing :: Typed",
-]
-dependencies = [
-    "aiohttp",
-    "gidgethub",
-    "gunicorn",
-    "packaging",
-    "starlette",
-    "typed_classproperties>=1.1",
-    "uvicorn-worker",
-]
-license = "Apache-2.0"
-license-files = ["LICENSE"]
 name = "toml-version-finder"
 requires-python = ">=3.12"
 version = "1.0.0"
-
-[project.urls]
-Repository = "https://github.com/CarrotManMatt/toml-version-finder"
 
 
 [tool.mypy]
@@ -149,7 +122,7 @@ max-returns = 10
 keep-runtime-typing = true
 
 [tool.uv]
-default-groups = ["dev"]
+default-groups = ["dev", "main"]
 no-binary-package = ["toml-version-finder"]
 no-build = true
 package = false
