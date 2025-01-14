@@ -1,4 +1,4 @@
-""""""
+"""Package version finders which can parse from lock or PEP621 files."""
 
 import abc
 import re
@@ -37,7 +37,7 @@ __all__: "Sequence[str]" = (
 
 
 class BaseVersionFinder(abc.ABC):
-    """"""
+    """Core functionality for version finder implementation classes."""
 
     @override
     def __init__(
@@ -73,7 +73,7 @@ class BaseVersionFinder(abc.ABC):
         subdirectory: "PurePosixPath | None" = None,
         package_name: str,
     ) -> "Self":
-        """"""
+        """Retrieve a partially initialised version finder with the given arguments."""
         return cls(
             lock_file_fetcher=file_fetcher,
             lock_subdirectory=subdirectory,
@@ -88,14 +88,14 @@ class BaseVersionFinder(abc.ABC):
 
     @final
     async def parse_lock(self) -> str:
-        """"""
+        """Retrieve the distinct version of the selected package in the selected lock file."""
         return await self._parse_lock(
             raw_lock_contents=await self._lock_file_fetcher(content_file=self.lock_file_path),
             package_name=self.package_name,
         )
 
     async def parse_pep621(self) -> str:
-        """"""
+        """Retrieve the version limits of the selected package in the selected PEP621 file."""
         project_contents: object | None = self._convert_toml(
             await self._pep621_file_fetcher(content_file=self.pep621_file_path)
         ).get("project", None)
@@ -124,30 +124,39 @@ class BaseVersionFinder(abc.ABC):
     @classproperty
     @abc.abstractmethod
     def _lock_file_name(cls) -> str:
-        """"""
+        """
+        The fixed file name of this version finder's lock file.
+
+        E.g. `uv.lock`, `poetry.lock` or `pylock.toml`.
+        """
 
     @property
     def lock_file_path(self) -> "PurePosixPath":
-        """"""
+        """The location of this version finder's lock file."""
         return (
             PurePosixPath("/") if self._lock_subdirectory is None else self._lock_subdirectory
         ) / self._lock_file_name
 
     @property
     def pep621_file_path(self) -> "PurePosixPath":
-        """"""
+        """
+        The location of this version finder's PEP621 pyproject.toml file.
+
+        This file can be used as an alternative version identifier for a given package,
+        in contrast to the associated lock file finder.
+        """
         return (
             PurePosixPath("/") if self._lock_subdirectory is None else self._lock_subdirectory
         ) / "pyproject.toml"
 
     @property
     def package_name(self) -> str:
-        """"""
+        """The name of the package that will be searched for using this finder callable."""
         return self._package_name
 
 
 class PoetryVersionFinder(BaseVersionFinder):
-    """"""
+    """Finder callable to retrieve a package's locked version from a poetry lock file."""
 
     @classproperty
     def _lock_file_name(cls) -> str:
@@ -188,7 +197,7 @@ class PoetryVersionFinder(BaseVersionFinder):
 
 
 class UVVersionFinder(PoetryVersionFinder):
-    """"""
+    """Finder callable to retrieve a package's locked version from a uv lock file."""
 
     @classproperty
     def _lock_file_name(cls) -> str:
@@ -196,7 +205,7 @@ class UVVersionFinder(PoetryVersionFinder):
 
 
 class PEP751VersionFinder(BaseVersionFinder):
-    """"""
+    """Finder callable to retrieve a package's locked version from a PEP751 lock file."""
 
     @classproperty
     def _lock_file_name(cls) -> str:
@@ -210,7 +219,7 @@ class PEP751VersionFinder(BaseVersionFinder):
 
 
 class VersionMap(Enum):
-    """"""
+    """Known acceptable packages within known project locations."""
 
     CSSUOB__TEX_BOT_PY_V2__PY_CORD = PoetryVersionFinder.shortcut_factory(
         file_fetcher=GitHubFileFetcher(owner="CSSUoB", repo="TeX-Bot-Py-V2"),
@@ -230,7 +239,7 @@ class VersionMap(Enum):
     )
 
     async def fetch_version(self, file_type: str) -> str:
-        """"""
+        """Retrieve the current version of the selected package inside the selected project."""
         version_finder: BaseVersionFinder = self.value
 
         match file_type:

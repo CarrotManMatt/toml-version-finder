@@ -1,4 +1,4 @@
-""""""
+"""Primary HTTP response generation functionality."""
 
 from typing import TYPE_CHECKING
 

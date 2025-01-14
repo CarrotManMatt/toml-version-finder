@@ -1,4 +1,4 @@
-""""""
+"""Custom exception classes used throughout this project."""
 
 import abc
 from typing import TYPE_CHECKING, override
@@ -23,7 +23,7 @@ __all__: "Sequence[str]" = (
 
 
 class _BaseCustomException(Exception, abc.ABC):
-    """"""
+    """Base custom exception class that can be converted to an HTTP response."""
 
     @override
     def __init__(self, message: str | None = None) -> None:
@@ -34,12 +34,12 @@ class _BaseCustomException(Exception, abc.ABC):
     @classproperty
     @abc.abstractmethod
     def DEFAULT_MESSAGE(cls) -> str:
-        """"""
+        """Default message to be used for this exception if no custom message is given."""
 
     @classproperty
     @abc.abstractmethod
     def STATUS_CODE(cls) -> int:
-        """"""
+        """HTTP status code to use when returning this exception as an error response."""
 
     @override
     def __str__(self) -> str:
@@ -47,7 +47,7 @@ class _BaseCustomException(Exception, abc.ABC):
 
     @classmethod
     def exception_handler(cls, _request: "Request", exc: Exception) -> "Response":
-        """"""
+        """Starlette exception handler to return a correct HTTP response for this exception."""
         if not isinstance(exc, cls):
             raise TypeError
 
@@ -55,7 +55,7 @@ class _BaseCustomException(Exception, abc.ABC):
 
 
 class UnknownFileTypeError(_BaseCustomException, ValueError):
-    """"""
+    """The selected 'file_type' is not a valid value."""
 
     @override
     def __init__(self, message: str | None = None, file_type: str | None = None) -> None:
@@ -84,8 +84,8 @@ class UnknownFileTypeError(_BaseCustomException, ValueError):
         return 404
 
     @classmethod
+    @override
     def exception_handler(cls, _request: "Request", exc: Exception) -> "Response":
-        """"""
         if not isinstance(exc, cls):
             raise TypeError
 
@@ -93,7 +93,7 @@ class UnknownFileTypeError(_BaseCustomException, ValueError):
 
 
 class BaseUnsupportedError(_BaseCustomException, abc.ABC):
-    """"""
+    """Base exception class for errors arising from an implementation being unsupported."""
 
     @classproperty
     @override
@@ -102,7 +102,7 @@ class BaseUnsupportedError(_BaseCustomException, abc.ABC):
 
 
 class UnsupportedVersionFinderError(BaseUnsupportedError):
-    """"""
+    """The selected VersionFinder implementation is not supported."""
 
     @classproperty
     @override
@@ -111,7 +111,7 @@ class UnsupportedVersionFinderError(BaseUnsupportedError):
 
 
 class UnsupportedFileFetcherError(BaseUnsupportedError):
-    """"""
+    """The selected FileFetcher implementation is not supported."""
 
     @classproperty
     @override
@@ -120,7 +120,7 @@ class UnsupportedFileFetcherError(BaseUnsupportedError):
 
 
 class InvalidVersionFileContentError(_BaseCustomException, ValueError):
-    """"""
+    """The given version file's content was not valid."""
 
     @classproperty
     @override
@@ -134,7 +134,7 @@ class InvalidVersionFileContentError(_BaseCustomException, ValueError):
 
 
 class MissingPackageInVersionFileError(InvalidVersionFileContentError):
-    """"""
+    """The selected package could not be found in the given version file."""
 
     @override
     def __init__(self, message: str | None = None, package_name: str | None = None) -> None:

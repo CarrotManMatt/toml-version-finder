@@ -1,4 +1,4 @@
-""""""
+"""File fetchers which can retrieve a selected file from a known location."""
 
 import abc
 import base64
@@ -25,15 +25,15 @@ __all__: "Sequence[str]" = (
 
 
 class BaseFileFetcher(abc.ABC):
-    """"""
+    """Fetcher callable to fetch a chosen file from a known location."""
 
     @abc.abstractmethod
     async def __call__(self, content_file: "PurePosixPath") -> str:
-        """"""
+        """Fetch the selected file using a subclass's fetching implementation."""
 
 
 class GitHubFileFetcher(BaseFileFetcher):
-    """"""
+    """Fetcher callable to download a chosen file from an owner's GitHub repository."""
 
     @override
     def __init__(self, *, owner: str, repo: str) -> None:
@@ -74,10 +74,10 @@ class GitHubFileFetcher(BaseFileFetcher):
 
     @property
     def owner(self) -> str:
-        """"""
+        """Associated GitHub owner name of repository where the file will be fetched from."""
         return self._owner
 
     @property
     def repo(self) -> str:
-        """"""
+        """Associated GitHub repository name where the file will be fetched from."""
         return self._repo

@@ -1,4 +1,4 @@
-""""""
+"""Environment configuration values."""
 
 from typing import TYPE_CHECKING
 
