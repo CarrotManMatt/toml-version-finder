@@ -168,7 +168,7 @@ jobs:
               with:
                 images: ${{env.REGISTRY}}/${{env.IMAGE_NAME}}
                 tags: |-
-                    type=ref,event=branch
+                    type=ref,event=branch,prefix=br-
                     type=ref,event=pr
                     type=semver,pattern={{version}}
                     type=semver,pattern={{major}}.{{minor}}
