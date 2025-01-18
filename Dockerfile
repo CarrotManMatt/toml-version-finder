@@ -14,7 +14,7 @@ COPY . /app
 FROM python:3.13-slim-bookworm
 
 LABEL org.opencontainers.image.source=https://github.com/CarrotManMatt/toml-version-finder
-LABEL org.opencontainers.image.licenses=Apache-2.0
+LABEL org.opencontainers.image.licenses=GPL-3.0-or-later
 
 COPY --from=builder --chown=app:app /app /app
 
