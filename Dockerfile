@@ -21,15 +21,15 @@ COPY --from=builder --chown=app:app /app /app
 ENV LANG=C.UTF-8 PATH="/app/.venv/bin:$PATH"
 
 
-ENTRYPOINT [
-    "gunicorn",
-    "app:app",
-    "--chdir",
-    "/app",
-    "-w",
-    "4",
-    "-k",
-    "uvicorn_worker.UvicornWorker",
-    "--access-logfile",
-    "-"
+ENTRYPOINT [ \
+    "gunicorn", \
+    "app:app", \
+    "--chdir", \
+    "/app", \
+    "-w", \
+    "4", \
+    "-k", \
+    "uvicorn_worker.UvicornWorker", \
+    "--access-logfile", \
+    "-" \
 ]
