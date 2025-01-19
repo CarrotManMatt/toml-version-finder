@@ -31,5 +31,8 @@ ENTRYPOINT [ \
     "-k", \
     "uvicorn_worker.UvicornWorker", \
     "--access-logfile", \
-    "-" \
+    "-", \
+    "--log-file", \
+    "-", \
+    "--capture-output" \
 ]

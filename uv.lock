@@ -584,7 +584,7 @@ type-check = [
 
 [package.metadata.requires-dev]
 deploy = [
-    { name = "gunicorn" },
+    { name = "gunicorn", specifier = ">=19.7" },
     { name = "uvicorn-worker" },
 ]
 dev = [

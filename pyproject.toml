@@ -1,5 +1,5 @@
 [dependency-groups]
-deploy = ["gunicorn", "uvicorn-worker"]
+deploy = ["gunicorn>=19.7", "uvicorn-worker"]
 dev = [
     "uvicorn",
     { include-group = "lint-format" },
