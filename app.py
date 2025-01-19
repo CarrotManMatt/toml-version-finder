@@ -2,18 +2,21 @@
 
 from typing import TYPE_CHECKING
 
+import aiohttp
 import gidgethub
+from gidgethub.aiohttp import GitHubAPI
 from starlette.applications import Starlette
 from starlette.exceptions import HTTPException
-from starlette.responses import JSONResponse, PlainTextResponse
+from starlette.responses import JSONResponse
 from starlette.routing import Route
 
 import config
 import version_finders
 from exceptions import (
+    BaseUnknownPathParameterError,
     BaseUnsupportedError,
     InvalidVersionFileContentError,
-    UnknownFileTypeError,
+    UnknowAPIVersionError,
 )
 from validators import (
     validate_owner,
@@ -67,30 +70,60 @@ def _parse_value_from_path_params(
 
 
 async def _toml_find_version_endpoint(request: "Request") -> "Response":
+    api_version: str = (
+        _parse_value_from_path_params(request.path_params, "api_version").lower().strip()
+    )
+    if api_version != "v1":
+        raise UnknowAPIVersionError(api_version)
+
     unknown_version_request_error: KeyError
     try:
         version_file: version_finders.VersionMap = _version_file_from_url(request.path_params)
     except KeyError as unknown_version_request_error:
         raise HTTPException(status_code=404) from unknown_version_request_error
 
+    file_type: str = (
+        _parse_value_from_path_params(request.path_params, "file_type").lower().strip()
+    )
+
     return JSONResponse(
-        await version_file.fetch_version(
-            _parse_value_from_path_params(request.path_params, "file_type").lower().strip()
-        )
+        {
+            "api_version": api_version,
+            "file_type": file_type,
+            "package_version": await version_file.fetch_version(file_type),
+            "package_name": version_file.value.package_name,
+        }
     )
 
 
-def _gidgethub_exception_handler(_request: "Request", exc: Exception) -> "Response":
-    return PlainTextResponse(f"GitHub: {exc}", status_code=502)
+async def _healthcheck_endpoint(_request: "Request") -> "Response":
+    session: object
+    async with aiohttp.ClientSession() as session:
+        github_client: GitHubAPI = GitHubAPI(
+            session, requester="", oauth_token=str(config.GITHUB_API_KEY)
+        )
+        await github_client.getitem("/octocat")
+
+    return JSONResponse({"status": "ok"})
 
 
 app: Starlette = Starlette(
     debug=config.DEBUG,
-    routes=[Route("/{file_type}/{owner}/{repo}/{package_name}", _toml_find_version_endpoint)],
+    routes=[
+        Route("/healthcheck", _healthcheck_endpoint),
+        Route(
+            "/{api_version}/{file_type}/{owner}/{repo}/{package_name}",
+            _toml_find_version_endpoint,
+        ),
+    ],
     exception_handlers={
         BaseUnsupportedError: BaseUnsupportedError.exception_handler,
         InvalidVersionFileContentError: InvalidVersionFileContentError.exception_handler,
-        UnknownFileTypeError: UnknownFileTypeError.exception_handler,
-        gidgethub.GitHubException: _gidgethub_exception_handler,
+        gidgethub.GitHubException: (
+            lambda _request, exc: JSONResponse(
+                {"error_message": f"Github: {exc}"}, status_code=502
+            )
+        ),
+        BaseUnknownPathParameterError: BaseUnknownPathParameterError.exception_handler,
     },
 )

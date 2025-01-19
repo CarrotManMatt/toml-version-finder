@@ -20,7 +20,6 @@ COPY --from=builder --chown=app:app /app /app
 
 ENV LANG=C.UTF-8 PATH="/app/.venv/bin:$PATH"
 
-
 ENTRYPOINT [ \
     "gunicorn", \
     "app:app", \
@@ -32,9 +31,6 @@ ENTRYPOINT [ \
     "uvicorn_worker.UvicornWorker", \
     "--access-logfile", \
     "-", \
-    "--log-file", \
-    "-", \
-    "--capture-output", \
     "--bind", \
     ":8000" \
 ]
