@@ -34,5 +34,7 @@ ENTRYPOINT [ \
     "-", \
     "--log-file", \
     "-", \
-    "--capture-output" \
+    "--capture-output", \
+    "--bind", \
+    ":8000" \
 ]
