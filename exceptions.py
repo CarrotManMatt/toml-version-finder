@@ -116,32 +116,6 @@ class UnknownFileTypeError(BaseUnknownPathParameterError):
         return {**super()._get_response_content(), "file_type": self.file_type}
 
 
-class UnknowAPIVersionError(BaseUnknownPathParameterError):
-    """The selected 'api_version' is not a valid value."""
-
-    @override
-    def __init__(self, message: str | None = None, api_version: str | None = None) -> None:
-        super().__init__(message=message, unknown_value=api_version)
-
-    @classproperty
-    @override
-    def DEFAULT_MESSAGE(cls) -> str:
-        return "Unknown API version."
-
-    @property
-    def api_version(self) -> str | None:
-        """The unknown value that was used as an API version."""
-        return self._unknown_value
-
-    @api_version.setter
-    def api_version(self, __value: str, /) -> None:
-        self._unknown_value = __value
-
-    @override
-    def _get_response_content(self) -> "Mapping[str, object]":
-        return {**super()._get_response_content(), "api_version": self.api_version}
-
-
 class BaseUnsupportedError(_BaseCustomException, abc.ABC):
     """Base exception class for errors arising from an implementation being unsupported."""
 

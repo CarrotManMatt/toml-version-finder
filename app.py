@@ -6,9 +6,9 @@ import aiohttp
 import gidgethub
 from gidgethub.aiohttp import GitHubAPI
 from starlette.applications import Starlette
-from starlette.exceptions import HTTPException
 from starlette.responses import JSONResponse
 from starlette.routing import Route
+from starlette.schemas import SchemaGenerator
 
 import config
 import version_finders
@@ -16,7 +16,6 @@ from exceptions import (
     BaseUnknownPathParameterError,
     BaseUnsupportedError,
     InvalidVersionFileContentError,
-    UnknowAPIVersionError,
 )
 from validators import (
     validate_owner,
@@ -69,34 +68,101 @@ def _parse_value_from_path_params(
     return value
 
 
-async def _toml_find_version_endpoint(request: "Request") -> "Response":
-    api_version: str = (
-        _parse_value_from_path_params(request.path_params, "api_version").lower().strip()
-    )
-    if api_version != "v1":
-        raise UnknowAPIVersionError(api_version)
+class _TOMLFindVersionEndpoint:
+    def __init__(self, file_type: str) -> None:
+        self.file_type: str = file_type
 
-    unknown_version_request_error: KeyError
-    try:
-        version_file: version_finders.VersionMap = _version_file_from_url(request.path_params)
-    except KeyError as unknown_version_request_error:
-        raise HTTPException(status_code=404) from unknown_version_request_error
+    async def __call__(self, request: "Request") -> "Response":
+        """
+        summary: Retrieve the specific version of a package in a project from a known TOML file
+        responses:
+          200:
+            description: OK
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    file_type:
+                      type: string
+                      enum: [lock, pep621]
+                    package_version:
+                      type: string
+                      example: 1.2.3
+                    package_name:
+                      type: string
+                      example: django
+          404:
+            description: One or more of the given path parameters were unknown
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    error_message:
+                      description: The reason for the encountered problem
+                      type: string
+          502:
+            description: >-
+              The connection to to the GitHub API is unavailable or incorrectly configured
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    error_message:
+                      description: The reason for the encountered problem
+                      type: string
+        """  # noqa: D205, D415  # TODO: Add 404 extra parameters (Oneof)
+        unknown_version_request_error: KeyError
+        try:
+            version_file: version_finders.VersionMap = _version_file_from_url(
+                request.path_params
+            )
+        except KeyError as unknown_version_request_error:
+            return JSONResponse(
+                {
+                    "error_message": "Unknown version file request.",
+                    "version_request_hash": str(unknown_version_request_error).strip("'"),
+                },
+                status_code=404,
+            )
 
-    file_type: str = (
-        _parse_value_from_path_params(request.path_params, "file_type").lower().strip()
-    )
-
-    return JSONResponse(
-        {
-            "api_version": api_version,
-            "file_type": file_type,
-            "package_version": await version_file.fetch_version(file_type),
-            "package_name": version_file.value.package_name,
-        }
-    )
+        return JSONResponse(
+            {
+                "file_type": self.file_type,
+                "package_version": await version_file.fetch_version(self.file_type),
+                "package_name": version_file.value.package_name,
+            }
+        )
 
 
 async def _healthcheck_endpoint(_request: "Request") -> "Response":
+    """
+    summary: Retrieve a simple response for whether the application is alive
+    responses:
+      200:
+        description: OK
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: string
+                  enum: [OK]
+      502:
+        description: >-
+          The connection to to the GitHub API is unavailable or incorrectly configured
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                error_message:
+                  description: The reason for the encountered problem
+                  type: string
+    """  # noqa: D205,D415
     session: object
     async with aiohttp.ClientSession() as session:
         github_client: GitHubAPI = GitHubAPI(
@@ -107,14 +173,38 @@ async def _healthcheck_endpoint(_request: "Request") -> "Response":
     return JSONResponse({"status": "ok"})
 
 
+schemas: SchemaGenerator = SchemaGenerator(
+    {
+        "openapi": "3.0.0",
+        "info": {
+            "title": "TOML Version Finder API",
+            "version": "1.0.0",
+            "contact": {"email": "matt@carrotmanmatt.com"},
+            "license": {
+                "name": "GPL-3.0-or-later",
+                "url": "https://raw.githubusercontent.com/CarrotManMatt/toml-version-finder/refs/heads/main/LICENSE",
+            },
+        },
+        "servers": [{"url": "https://toml-version-finder.carrotmanmatt.com"}],
+    }
+)
+
 app: Starlette = Starlette(
     debug=config.DEBUG,
     routes=[
-        Route("/healthcheck", _healthcheck_endpoint),
         Route(
-            "/{api_version}/{file_type}/{owner}/{repo}/{package_name}",
-            _toml_find_version_endpoint,
+            "/schema",
+            endpoint=lambda request: schemas.OpenAPIResponse(request=request),
+            include_in_schema=False,
         ),
+        Route("/healthcheck", _healthcheck_endpoint),
+        *[
+            Route(
+                f"/{file_type}/{{owner}}/{{repo}}/{{package_name}}",
+                endpoint=_TOMLFindVersionEndpoint(file_type).__call__,
+            )
+            for file_type in ("lock", "pep621")
+        ],
     ],
     exception_handlers={
         BaseUnsupportedError: BaseUnsupportedError.exception_handler,
