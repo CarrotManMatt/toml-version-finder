@@ -1,6 +1,7 @@
 [dependency-groups]
 deploy = ["gunicorn>=19.7", "uvicorn-worker"]
 dev = [
+    #    "uvicorn[standard]",
     "uvicorn",
     { include-group = "lint-format" },
     { include-group = "pre-commit" },
