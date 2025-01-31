@@ -3,20 +3,19 @@
 from typing import TYPE_CHECKING
 
 import aiohttp
-import gidgethub
-from gidgethub.aiohttp import GitHubAPI
-from starlette.applications import Starlette
-from starlette.responses import JSONResponse
-from starlette.routing import Route
-from starlette.schemas import SchemaGenerator
-
 import config
+import gidgethub
 import version_finders
 from exceptions import (
     BaseUnknownPathParameterError,
     BaseUnsupportedError,
     InvalidVersionFileContentError,
 )
+from gidgethub.aiohttp import GitHubAPI
+from starlette.applications import Starlette
+from starlette.responses import JSONResponse
+from starlette.routing import Route
+from starlette.schemas import SchemaGenerator
 from validators import (
     validate_owner,
     validate_package_name,

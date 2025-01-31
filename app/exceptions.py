@@ -9,9 +9,8 @@ from typed_classproperties import classproperty
 if TYPE_CHECKING:
     from collections.abc import Mapping, Sequence
 
-    from starlette.requests import Request
-
     from file_fetchers import BaseFileFetcher
+    from starlette.requests import Request
     from version_finders import BaseVersionFinder
 
 __all__: "Sequence[str]" = (

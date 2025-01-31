@@ -9,7 +9,8 @@ RUN --mount=type=cache,target=/root/.cache/uv \
     --mount=type=bind,source=pyproject.toml,target=pyproject.toml \
     uv sync --frozen --no-install-project --no-group dev --group deploy
 
-COPY . /app
+COPY LICENSE /app/
+COPY ./app /app
 
 FROM python:3.13-slim-bookworm
 
@@ -22,7 +23,7 @@ ENV LANG=C.UTF-8 PATH="/app/.venv/bin:$PATH"
 
 ENTRYPOINT [ \
     "gunicorn", \
-    "app:app", \
+    "main:app", \
     "--chdir", \
     "/app", \
     "-w", \

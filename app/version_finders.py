@@ -9,9 +9,6 @@ from pathlib import PurePosixPath
 from tomllib import TOMLDecodeError
 from typing import TYPE_CHECKING, final, override
 
-from packaging.requirements import Requirement
-from typed_classproperties import classproperty
-
 from exceptions import (
     InvalidVersionFileContentError,
     MissingPackageInVersionFileError,
@@ -19,6 +16,8 @@ from exceptions import (
     UnsupportedVersionFinderError,
 )
 from file_fetchers import GitHubFileFetcher
+from packaging.requirements import Requirement
+from typed_classproperties import classproperty
 from validators import validate_package_name
 
 if TYPE_CHECKING:

@@ -5,10 +5,9 @@ import base64
 from typing import TYPE_CHECKING, TypedDict, override
 
 import aiohttp
-from gidgethub.aiohttp import GitHubAPI
-
 import config
 from exceptions import InvalidVersionFileContentError, InvalidVersionFileEncodingError
+from gidgethub.aiohttp import GitHubAPI
 from validators import validate_owner, validate_repo
 
 if TYPE_CHECKING:
