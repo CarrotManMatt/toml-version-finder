@@ -17,3 +17,4 @@ with warnings.catch_warnings(action="ignore", category=UserWarning):
 
 DEBUG: "Final[bool]" = config("DEBUG", cast=bool, default=False)
 GITHUB_API_KEY: "Final[Secret]" = config("GITHUB_API_KEY", cast=Secret)
+GITHUB_API_TIMEOUT: "Final[float]" = config("GITHUB_API_TIMEOUT", cast=float, default=15)

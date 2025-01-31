@@ -9,8 +9,9 @@ from typed_classproperties import classproperty
 if TYPE_CHECKING:
     from collections.abc import Mapping, Sequence
 
-    from file_fetchers import BaseFileFetcher
     from starlette.requests import Request
+
+    from file_fetchers import BaseFileFetcher
     from version_finders import BaseVersionFinder
 
 __all__: "Sequence[str]" = (
@@ -46,9 +47,9 @@ class _BaseCustomException(Exception, abc.ABC):
     def STATUS_CODE(cls) -> int:
         """HTTP status code to use when returning this exception as an error response."""
 
-    def _get_response_content(self) -> "Mapping[str, object]":
+    def _get_additional_details(self) -> "Mapping[str, object]":
         """Create the content to be used when converting this exception to an HTTP response."""
-        return {"error_message": self.message}
+        return {}
 
     @override
     def __str__(self) -> str:
@@ -60,7 +61,10 @@ class _BaseCustomException(Exception, abc.ABC):
         if not isinstance(exc, cls):
             raise TypeError
 
-        return JSONResponse(cls._get_response_content(exc), status_code=cls.STATUS_CODE)
+        return JSONResponse(
+            {"error_message": exc.message, "details": cls._get_additional_details(exc)},
+            status_code=cls.STATUS_CODE,
+        )
 
 
 class BaseUnknownPathParameterError(_BaseCustomException, ValueError, abc.ABC):
@@ -111,8 +115,8 @@ class UnknownFileTypeError(BaseUnknownPathParameterError):
         self._unknown_value = __value
 
     @override
-    def _get_response_content(self) -> "Mapping[str, object]":
-        return {**super()._get_response_content(), "file_type": self.file_type}
+    def _get_additional_details(self) -> "Mapping[str, object]":
+        return {"file_type": self.file_type}
 
 
 class BaseUnsupportedError(_BaseCustomException, abc.ABC):
@@ -171,18 +175,15 @@ class UnsupportedVersionFinderError(_UnsupportedClassError["BaseVersionFinder"])
         return "Unsupported version finder."
 
     @override
-    def _get_response_content(self) -> "Mapping[str, object]":
-        return {
-            **super()._get_response_content(),
-            **(
-                {
-                    "version_finder_name": self.version_finder.__name__,
-                    "version_finder_class": str(self.version_finder),
-                }
-                if self.version_finder is not None
-                else {}
-            ),
-        }
+    def _get_additional_details(self) -> "Mapping[str, object]":
+        return (
+            {
+                "version_finder_name": self.version_finder.__name__,
+                "version_finder_class": str(self.version_finder),
+            }
+            if self.version_finder is not None
+            else super()._get_additional_details()
+        )
 
 
 class UnsupportedFileFetcherError(_UnsupportedClassError["BaseFileFetcher"]):
@@ -211,18 +212,15 @@ class UnsupportedFileFetcherError(_UnsupportedClassError["BaseFileFetcher"]):
         return "Unsupported file fetcher."
 
     @override
-    def _get_response_content(self) -> "Mapping[str, object]":
-        return {
-            **super()._get_response_content(),
-            **(
-                {
-                    "file_fetcher_name": self.file_fetcher.__name__,
-                    "file_fetcher_class": str(self.file_fetcher),
-                }
-                if self.file_fetcher is not None
-                else {}
-            ),
-        }
+    def _get_additional_details(self) -> "Mapping[str, object]":
+        return (
+            {
+                "file_fetcher_name": self.file_fetcher.__name__,
+                "file_fetcher_class": str(self.file_fetcher),
+            }
+            if self.file_fetcher is not None
+            else super()._get_additional_details()
+        )
 
 
 class InvalidVersionFileContentError(_BaseCustomException, ValueError):
@@ -263,11 +261,10 @@ class InvalidVersionFileEncodingError(InvalidVersionFileContentError):
         )
 
     @override
-    def _get_response_content(self) -> "Mapping[str, object]":
-        return {
-            **super()._get_response_content(),
-            **({"encoding": self.encoding} if self.encoding else {}),
-        }
+    def _get_additional_details(self) -> "Mapping[str, object]":
+        return (
+            {"encoding": self.encoding} if self.encoding else super()._get_additional_details()
+        )
 
 
 class MissingPackageInVersionFileError(InvalidVersionFileContentError):
@@ -301,8 +298,9 @@ class MissingPackageInVersionFileError(InvalidVersionFileContentError):
         )
 
     @override
-    def _get_response_content(self) -> "Mapping[str, object]":
-        return {
-            **super()._get_response_content(),
-            **({"package_name": self.package_name} if self.package_name else {}),
-        }
+    def _get_additional_details(self) -> "Mapping[str, object]":
+        return (
+            {"package_name": self.package_name}
+            if self.package_name
+            else super()._get_additional_details()
+        )

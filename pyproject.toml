@@ -100,6 +100,15 @@ task-tags = ["BUG", "DONE", "FIXME", "HACK", "IDEA", "ISSUE", "NOBUG", "NOTE", "
 quote-annotations = true
 strict = true
 
+[tool.ruff.lint.isort]
+known-first-party = [
+    "config",
+    "exceptions",
+    "file_fetchers",
+    "main",
+    "validators",
+    "version_finders",
+]
 [tool.ruff.lint.pep8-naming]
 classmethod-decorators = [
     "typed_classproperties.cached_classproperty",

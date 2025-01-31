@@ -5,9 +5,10 @@ import base64
 from typing import TYPE_CHECKING, TypedDict, override
 
 import aiohttp
+from gidgethub.aiohttp import GitHubAPI
+
 import config
 from exceptions import InvalidVersionFileContentError, InvalidVersionFileEncodingError
-from gidgethub.aiohttp import GitHubAPI
 from validators import validate_owner, validate_repo
 
 if TYPE_CHECKING:
@@ -56,7 +57,7 @@ class GitHubFileFetcher(BaseFileFetcher):
             raise ValueError(NON_ABSOLUTE_PATH_MESSAGE)
 
         session: object
-        async with aiohttp.ClientSession() as session:
+        async with aiohttp.ClientSession(conn_timeout=config.GITHUB_API_TIMEOUT) as session:
             github_client: GitHubAPI = GitHubAPI(
                 session, f"{self.owner}/{self.repo}", oauth_token=str(config.GITHUB_API_KEY)
             )

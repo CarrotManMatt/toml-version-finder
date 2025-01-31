@@ -9,6 +9,9 @@ from pathlib import PurePosixPath
 from tomllib import TOMLDecodeError
 from typing import TYPE_CHECKING, final, override
 
+from packaging.requirements import Requirement
+from typed_classproperties import classproperty
+
 from exceptions import (
     InvalidVersionFileContentError,
     MissingPackageInVersionFileError,
@@ -16,8 +19,6 @@ from exceptions import (
     UnsupportedVersionFinderError,
 )
 from file_fetchers import GitHubFileFetcher
-from packaging.requirements import Requirement
-from typed_classproperties import classproperty
 from validators import validate_package_name
 
 if TYPE_CHECKING:
@@ -235,7 +236,7 @@ class VersionMap(Enum):
         file_fetcher=GitHubFileFetcher(owner="CarrotManMatt", repo="SmartServe"),
         package_name="django",
     )
-    CARROTMANMATT__CCFT_PYMARKDOWN__PYMARKDOWN = UVVersionFinder.shortcut_factory(
+    CARROTMANMATT__CCFT_PYMARKDOWN__PYMARKDOWNLNT = UVVersionFinder.shortcut_factory(
         file_fetcher=GitHubFileFetcher(owner="CarrotManMatt", repo="ccft-pymarkdown"),
         package_name="pymarkdownlnt",
     )

@@ -3,19 +3,20 @@
 from typing import TYPE_CHECKING
 
 import aiohttp
-import config
 import gidgethub
+from gidgethub.aiohttp import GitHubAPI
+from starlette.applications import Starlette
+from starlette.responses import JSONResponse
+from starlette.routing import Route
+from starlette.schemas import SchemaGenerator
+
+import config
 import version_finders
 from exceptions import (
     BaseUnknownPathParameterError,
     BaseUnsupportedError,
     InvalidVersionFileContentError,
 )
-from gidgethub.aiohttp import GitHubAPI
-from starlette.applications import Starlette
-from starlette.responses import JSONResponse
-from starlette.routing import Route
-from starlette.schemas import SchemaGenerator
 from validators import (
     validate_owner,
     validate_package_name,
@@ -74,6 +75,28 @@ class _TOMLFindVersionEndpoint:
     async def __call__(self, request: "Request") -> "Response":
         """
         summary: Retrieve the specific version of a package in a project from a known TOML file
+        parameters:
+          - in: path
+            name: owner
+            required: true
+            description: The owner of the repository where the version file is located
+            schema:
+              type: string
+            example: CarrotManMatt
+          - in: path
+            name: repo
+            required: true
+            description: The name of the repository where the version file is located
+            schema:
+              type: string
+            example: CCFT-Pymarkdown
+          - in: path
+            name: package_name
+            required: true
+            description: The name of the package to retrieve the version of
+            schema:
+              type: string
+            example: PyMarkdownlnt
         responses:
           200:
             description: OK
@@ -97,10 +120,78 @@ class _TOMLFindVersionEndpoint:
               application/json:
                 schema:
                   type: object
+                  required:
+                    - error_message
+                    - details
                   properties:
                     error_message:
                       description: The reason for the encountered problem
                       type: string
+                    details:
+                      oneOf:
+                        - description: >-
+                            Additional informational details arising from the problem
+                          type: object
+                          properties:
+                            version_request_hash:
+                              description: >-
+                                The unique identifier of the requested package name,
+                                repository owner & repository name
+                                type: string
+                        - description:
+                            Additional informational details arising from the problem
+                          type: object
+                          properties:
+                            file_type:
+                              description: The unknown version file type that was requested
+                              type: string
+                        - description:
+                            Additional informational details arising from the problem
+                          type: object
+                          properties:
+                            version_finder_name:
+                              description: >-
+                                The name of the version finder that was expected to be used,
+                                but is internally unsupported
+                              type: string
+                            version_finder_class:
+                              description: >-
+                                The Python class of the version finder
+                                that was expected to be used, but is internally unsupported
+                              type: string
+                        - description:
+                            Additional informational details arising from the problem
+                          type: object
+                          properties:
+                            file_fetcher_name:
+                              description: >-
+                                The name of the file fetcher that was expected to be used,
+                                but is internally unsupported
+                              type: string
+                            file_fetcher_class:
+                              description: >-
+                                The Python class of the file fetcher
+                                that was expected to be used, but is internally unsupported
+                              type: string
+                        - description:
+                            Additional informational details arising from the problem
+                          type: object
+                          properties:
+                            encoding:
+                              description: >-
+                                The unknown encoding type of the file fetcher response,
+                                containing the version file
+                              type: string
+                        - description:
+                            Additional informational details arising from the problem
+                          type: object
+                          properties:
+                            package_name:
+                              description: >-
+                                The name of the requested package
+                                that could not be found in the fetched version file
+                              type: string
+
           502:
             description: >-
               The connection to to the GitHub API is unavailable or incorrectly configured
@@ -108,11 +199,13 @@ class _TOMLFindVersionEndpoint:
               application/json:
                 schema:
                   type: object
+                  required:
+                    - error_message
                   properties:
                     error_message:
                       description: The reason for the encountered problem
                       type: string
-        """  # noqa: D205, D415  # TODO: Add 404 extra parameters (Oneof)
+        """  # noqa: D205, D415
         unknown_version_request_error: KeyError
         try:
             version_file: version_finders.VersionMap = _version_file_from_url(
@@ -122,7 +215,9 @@ class _TOMLFindVersionEndpoint:
             return JSONResponse(
                 {
                     "error_message": "Unknown version file request.",
-                    "version_request_hash": str(unknown_version_request_error).strip("'"),
+                    "details": {
+                        "version_request_hash": str(unknown_version_request_error).strip("'")
+                    },
                 },
                 status_code=404,
             )
@@ -146,6 +241,8 @@ async def _healthcheck_endpoint(_request: "Request") -> "Response":
           application/json:
             schema:
               type: object
+              required:
+                - status
               properties:
                 status:
                   type: string
@@ -157,13 +254,15 @@ async def _healthcheck_endpoint(_request: "Request") -> "Response":
           application/json:
             schema:
               type: object
+              required:
+                - error_message
               properties:
                 error_message:
                   description: The reason for the encountered problem
                   type: string
     """  # noqa: D205,D415
     session: object
-    async with aiohttp.ClientSession() as session:
+    async with aiohttp.ClientSession(conn_timeout=config.GITHUB_API_TIMEOUT) as session:
         github_client: GitHubAPI = GitHubAPI(
             session, requester="", oauth_token=str(config.GITHUB_API_KEY)
         )
@@ -211,6 +310,11 @@ app: Starlette = Starlette(
         gidgethub.GitHubException: (
             lambda _request, exc: JSONResponse(
                 {"error_message": f"Github: {exc}"}, status_code=502
+            )
+        ),
+        aiohttp.client_exceptions.ConnectionTimeoutError: (
+            lambda _request, exc: JSONResponse(
+                {"error_message": f"Proxy: {exc}"}, status_code=502
             )
         ),
         BaseUnknownPathParameterError: BaseUnknownPathParameterError.exception_handler,
