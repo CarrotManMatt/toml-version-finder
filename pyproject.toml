@@ -7,7 +7,14 @@ dev = [
     { include-group = "type-check" },
 ]
 lint-format = ["ruff>=0.4"]
-main = ["aiohttp", "gidgethub", "packaging", "starlette", "typed_classproperties>=1.1"]
+main = [
+    "aiohttp",
+    "gidgethub",
+    "packaging",
+    "pyyaml",
+    "starlette",
+    "typed_classproperties>=1.1",
+]
 pre-commit = ["pre-commit"]
 type-check = ["mypy>=1.12"]
 
