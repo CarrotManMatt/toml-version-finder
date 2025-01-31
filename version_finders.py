@@ -159,6 +159,7 @@ class PoetryVersionFinder(BaseVersionFinder):
     """Finder callable to retrieve a package's locked version from a poetry lock file."""
 
     @classproperty
+    @override
     def _lock_file_name(cls) -> str:
         return "poetry.lock"
 
@@ -200,6 +201,7 @@ class UVVersionFinder(PoetryVersionFinder):
     """Finder callable to retrieve a package's locked version from a uv lock file."""
 
     @classproperty
+    @override
     def _lock_file_name(cls) -> str:
         return "uv.lock"
 
@@ -208,6 +210,7 @@ class PEP751VersionFinder(BaseVersionFinder):
     """Finder callable to retrieve a package's locked version from a PEP751 lock file."""
 
     @classproperty
+    @override
     def _lock_file_name(cls) -> str:
         return "pylock.toml"
 
