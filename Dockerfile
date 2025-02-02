@@ -14,8 +14,11 @@ COPY ./app /app
 
 FROM python:3.13-slim-bookworm
 
+# renovate: release=bookworm depName=curl
+ENV CURL_VERSION="7.88.1"
+
 RUN apt-get -y update \
-    && apt-get install -y --no-install-recommends curl=7.88.* \
+    && apt-get install -y --no-install-recommends curl="${CURL_VERSION}" \
     && rm -rf /var/lib/apt/lists/*
 
 LABEL org.opencontainers.image.source=https://github.com/CarrotManMatt/toml-version-finder
