@@ -15,7 +15,7 @@ COPY ./app /app
 FROM python:3.13-slim-bookworm
 
 RUN apt-get -y update \
-    && apt-get install -y --no-install-recommends curl=8.11.1 \
+    && apt-get install -y --no-install-recommends curl=8.11.* \
     && rm -rf /var/lib/apt/lists/*
 
 LABEL org.opencontainers.image.source=https://github.com/CarrotManMatt/toml-version-finder
