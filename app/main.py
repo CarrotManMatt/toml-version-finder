@@ -1,12 +1,13 @@
 """Primary HTTP response generation functionality."""
 
+import re
 from typing import TYPE_CHECKING
 
 import aiohttp
 import gidgethub
 from gidgethub.aiohttp import GitHubAPI
 from starlette.applications import Starlette
-from starlette.responses import JSONResponse
+from starlette.responses import JSONResponse, RedirectResponse
 from starlette.routing import Route
 from starlette.schemas import SchemaGenerator
 
@@ -206,6 +207,16 @@ class _TOMLFindVersionEndpoint:
                       description: The reason for the encountered problem
                       type: string
         """  # noqa: D205, D415
+        if (
+            _parse_value_from_path_params(request.path_params, "package_name").lower()
+            == "pymarkdown"
+        ):
+            return RedirectResponse(
+                f"{re.sub(request.url.path, r'(?<=\/)pymarkdown$', 'pymarkdownlnt')}"
+                f"{f'?{request.url.query}' if request.url.query else ''}",
+                headers=request.headers,
+            )
+
         unknown_version_request_error: KeyError
         try:
             version_file: version_finders.VersionMap = _version_file_from_url(
