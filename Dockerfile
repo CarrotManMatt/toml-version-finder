@@ -14,8 +14,14 @@ COPY ./app /app
 
 FROM python:3.13-slim-bookworm
 
+RUN apt-get -y update \
+    && apt-get install -y --no-install-recommends curl=8.11.1 \
+    && rm -rf /var/lib/apt/lists/*
+
 LABEL org.opencontainers.image.source=https://github.com/CarrotManMatt/toml-version-finder
 LABEL org.opencontainers.image.licenses=GPL-3.0-or-later
+
+HEALTHCHECK CMD curl -f http://localhost:8000/healthcheck || exit 1
 
 COPY --from=builder --chown=app:app /app /app
 

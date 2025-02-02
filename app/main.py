@@ -312,11 +312,17 @@ app: Starlette = Starlette(
                 {"error_message": f"Github: {exc}"}, status_code=502
             )
         ),
-        aiohttp.client_exceptions.ConnectionTimeoutError: (
-            lambda _request, exc: JSONResponse(
-                {"error_message": f"Proxy: {exc}"}, status_code=502
+        **{
+            exception: (
+                lambda _request, exc: JSONResponse(
+                    {"error_message": f"Proxy: {exc}"}, status_code=502
+                )
             )
-        ),
+            for exception in (
+                aiohttp.client_exceptions.ConnectionTimeoutError,
+                aiohttp.client_exceptions.ClientConnectorDNSError,
+            )
+        },
         BaseUnknownPathParameterError: BaseUnknownPathParameterError.exception_handler,
     },
 )
