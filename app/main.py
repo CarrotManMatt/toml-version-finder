@@ -214,7 +214,6 @@ class _TOMLFindVersionEndpoint:
             return RedirectResponse(
                 f"{re.sub(request.url.path, r'(?<=\/)pymarkdown$', 'pymarkdownlnt')}"
                 f"{f'?{request.url.query}' if request.url.query else ''}",
-                headers=request.headers,
             )
 
         unknown_version_request_error: KeyError
