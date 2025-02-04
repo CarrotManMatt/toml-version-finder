@@ -207,14 +207,17 @@ class _TOMLFindVersionEndpoint:
                       description: The reason for the encountered problem
                       type: string
         """  # noqa: D205, D415
-        if (
-            _parse_value_from_path_params(request.path_params, "package_name").lower()
-            == "pymarkdown"
-        ):
-            return RedirectResponse(
-                f"{re.sub(request.url.path, r'(?<=\/)pymarkdown$', 'pymarkdownlnt')}"
-                f"{f'?{request.url.query}' if request.url.query else ''}",
-            )
+        match _parse_value_from_path_params(request.path_params, "package_name").lower():
+            case "pymarkdown":
+                return RedirectResponse(
+                    f"{re.sub(request.url.path, r'(?<=\/)pymarkdown$', 'pymarkdownlnt')}"
+                    f"{f'?{request.url.query}' if request.url.query else ''}",
+                )
+            case "pycord":
+                return RedirectResponse(
+                    f"{re.sub(request.url.path, r'(?<=\/)pycord$', 'py-cord')}"
+                    f"{f'?{request.url.query}' if request.url.query else ''}",
+                )
 
         unknown_version_request_error: KeyError
         try:
