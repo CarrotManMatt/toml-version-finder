@@ -135,7 +135,7 @@ class BaseVersionFinder(abc.ABC):
         """The location of this version finder's lock file."""
         return (
             PurePosixPath("/") if self._lock_subdirectory is None else self._lock_subdirectory
-        ) / self._lock_file_name
+        ) / self._LOCK_FILE_NAME
 
     @property
     def pep621_file_path(self) -> "PurePosixPath":
