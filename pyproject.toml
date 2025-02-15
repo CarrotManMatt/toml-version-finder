@@ -104,7 +104,7 @@ select = ["ALL", "D204", "D213", "D401"]
 task-tags = ["BUG", "DONE", "FIXME", "HACK", "IDEA", "ISSUE", "NOBUG", "NOTE", "REQ", "TODO"]
 
 [tool.ruff.lint.flake8-import-conventions]
-banned-from = ["abc"]
+banned-from = ["abc", "re", "regex"]
 
 [tool.ruff.lint.flake8-type-checking]
 quote-annotations = true
@@ -132,6 +132,7 @@ extend-ignore-names = [
     "NO_*_MESSAGE",
     "STATUS_CODE",
     "_BaseCustomException",
+    "_LOCK_FILE_NAME",
 ]
 
 [tool.ruff.lint.pycodestyle]

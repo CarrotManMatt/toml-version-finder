@@ -123,7 +123,7 @@ class BaseVersionFinder(abc.ABC):
 
     @classproperty
     @abc.abstractmethod
-    def _lock_file_name(cls) -> str:
+    def _LOCK_FILE_NAME(cls) -> str:
         """
         The fixed file name of this version finder's lock file.
 
@@ -160,7 +160,7 @@ class PoetryVersionFinder(BaseVersionFinder):
 
     @classproperty
     @override
-    def _lock_file_name(cls) -> str:
+    def _LOCK_FILE_NAME(cls) -> str:
         return "poetry.lock"
 
     @classmethod
@@ -202,7 +202,7 @@ class UVVersionFinder(PoetryVersionFinder):
 
     @classproperty
     @override
-    def _lock_file_name(cls) -> str:
+    def _LOCK_FILE_NAME(cls) -> str:
         return "uv.lock"
 
 
@@ -211,7 +211,7 @@ class PEP751VersionFinder(BaseVersionFinder):
 
     @classproperty
     @override
-    def _lock_file_name(cls) -> str:
+    def _LOCK_FILE_NAME(cls) -> str:
         return "pylock.toml"
 
     @classmethod
