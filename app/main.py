@@ -290,7 +290,7 @@ schemas: SchemaGenerator = SchemaGenerator(
         "info": {
             "title": "TOML Version Finder API",
             "version": "1.0.0",
-            "contact": {"email": "matt@carrotmanmatt.com"},
+            "contact": {"email": "admin@carrotmanmatt.com"},
             "license": {
                 "name": "GPL-3.0-or-later",
                 "url": "https://raw.githubusercontent.com/CarrotManMatt/toml-version-finder/refs/heads/main/LICENSE",
