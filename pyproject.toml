@@ -157,7 +157,6 @@ keep-runtime-typing = true
 
 [tool.uv]
 default-groups = ["dev", "main"]
-no-binary-package = ["toml-version-finder"]
 no-build = true
 package = false
-required-version = ">=0.5.8"
+required-version = ">=0.6.10"
