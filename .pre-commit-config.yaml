@@ -11,7 +11,7 @@ repos:
         - id: hadolint
 
     - repo: https://github.com/renovatebot/pre-commit-hooks
-      rev: 39.213.4
+      rev: 39.227.2
       hooks:
         - id: renovate-config-validator
           args: [--strict]
@@ -81,7 +81,7 @@ repos:
         - id: ruff-format
 
     - repo: https://github.com/astral-sh/uv-pre-commit
-      rev: 0.6.10
+      rev: 0.6.11
       hooks:
         - id: uv-lock
           always_run: true
