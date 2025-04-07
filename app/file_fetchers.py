@@ -2,7 +2,7 @@
 
 import abc
 import base64
-from typing import TYPE_CHECKING, TypedDict, override
+from typing import TYPE_CHECKING, override
 
 import aiohttp
 from gidgethub.aiohttp import GitHubAPI
@@ -14,7 +14,7 @@ from validators import validate_owner, validate_repo
 if TYPE_CHECKING:
     from collections.abc import Sequence
     from pathlib import PurePosixPath
-    from typing import Final
+    from typing import Final, TypedDict
 
 
 __all__: "Sequence[str]" = (
