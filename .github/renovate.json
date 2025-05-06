@@ -5,7 +5,7 @@
             "customType": "regex",
             "datasourceTemplate": "deb",
             "managerFilePatterns": [
-                "/^Dockerfile$/"
+                "/(^|/)Dockerfile$/"
             ],
             "matchStrings": [
                 "#\\s*renovate:\\s*?(release=(?<release>.*?))?\\s*depName=(?<depName>.*?)?\\sENV .*?_VERSION=\"(?<currentValue>.*)\""
