@@ -1,11 +1,11 @@
 name: Check, Build and Deploy TOML Version Finder Server
 
-on:
+"on":
     pull_request:
         branches: [main]
     push:
         branches: [main]
-        tags: ["v*"]
+        tags: [v*]
 
 jobs:
     uv-check:
@@ -22,13 +22,14 @@ jobs:
             - name: Check uv.lock (ensure all dependencies up to date)
               run: uv lock --check
 
+    # yamllint disable-line rule:key-ordering
     mypy:
+        env:
+            UV_FROZEN: true
+            UV_NO_SYNC: true
+            UV_PYTHON_DOWNLOADS: never
         needs: [uv-check]
         runs-on: ubuntu-latest
-        env:
-            UV_NO_SYNC: true
-            UV_FROZEN: true
-            UV_PYTHON_DOWNLOADS: never
 
         steps:
             - uses: actions/checkout@v4
@@ -46,25 +47,26 @@ jobs:
             - name: Install mypy From Locked Dependencies
               run: uv sync --no-group dev --group type-check
 
-            - name: Store Hashed Python Version
-              id: store-hashed-python-version
+            - id: store-hashed-python-version
+              name: Store Hashed Python Version
               run: echo "hashed_python_version=$(uv run -- python -VV | sha256sum | cut -d' ' -f1)"
                 >> $GITHUB_OUTPUT
 
             - uses: actions/cache@v4
               with:
-                path: ./.mypy_cache
                 key: mypy|${{steps.store-hashed-python-version.outputs.hashed_python_version}}
+                path: ./.mypy_cache
 
             - name: Run mypy
               run: uv run -- mypy .  # TODO: Add GitHub workflows output format
 
+    # yamllint disable-line rule:key-ordering
     pre-commit:
-        runs-on: ubuntu-latest
         env:
-            UV_NO_SYNC: true
             UV_FROZEN: true
+            UV_NO_SYNC: true
             UV_PYTHON_DOWNLOADS: never
+        runs-on: ubuntu-latest
 
         steps:
             - uses: actions/checkout@v4
@@ -82,15 +84,15 @@ jobs:
             - name: Install pre-commit From Locked Dependencies
               run: uv sync --only-group pre-commit
 
-            - name: Store Hashed Python Version
-              id: store-hashed-python-version
+            - id: store-hashed-python-version
+              name: Store Hashed Python Version
               run: echo "hashed_python_version=$(uv run -- python -VV | sha256sum | cut -d' ' -f1)"
                 >> $GITHUB_OUTPUT
 
             - uses: actions/cache@v4
               with:
-                path: ~/.cache/pre-commit
                 key: pre-commit|${{steps.store-hashed-python-version.outputs.hashed_python_version}}|${{hashFiles('.pre-commit-config.yaml')}}
+                path: ~/.cache/pre-commit
 
             - name: Setup pre-commit Environments
               run: uv run -- pre-commit install-hooks
@@ -101,15 +103,16 @@ jobs:
             - name: Run pre-commit
               run: uv run -- pre-commit run --all-files --hook-stage manual  # TODO: Add GitHub workflows output format
 
-            - uses: pre-commit-ci/lite-action@v1.1.0
-              if: ${{!cancelled()}}
+            - if: ${{!cancelled()}}
+              uses: pre-commit-ci/lite-action@v1.1.0
 
+    # yamllint disable-line rule:key-ordering
     ruff-lint:
-        runs-on: ubuntu-latest
         env:
-            UV_NO_SYNC: true
             UV_FROZEN: true
+            UV_NO_SYNC: true
             UV_PYTHON_DOWNLOADS: never
+        runs-on: ubuntu-latest
 
         steps:
             - uses: actions/checkout@v4
@@ -127,46 +130,46 @@ jobs:
             - name: Install ruff From Locked Dependencies
               run: uv sync --only-group lint-format
 
-            - name: Store Hashed Python Version
-              id: store-hashed-python-version
+            - id: store-hashed-python-version
+              name: Store Hashed Python Version
               run: echo "hashed_python_version=$(uv run -- python -VV | sha256sum | cut -d' ' -f1)"
                 >> $GITHUB_OUTPUT
 
             - uses: actions/cache@v4
               with:
-                path: ./.ruff_cache
                 key: ruff|${{steps.store-hashed-python-version.outputs.hashed_python_version}}
+                path: ./.ruff_cache
 
             - name: Run Ruff
               run: uv run -- ruff check --no-fix --output-format=github
 
+    # yamllint disable-line rule:key-ordering
     build-and-publish:
-        runs-on: ubuntu-latest
+        env:
+            IMAGE_NAME: ${{github.repository}}
+            REGISTRY: ghcr.io
         environment: publish
         needs: [mypy, pre-commit, ruff-lint, uv-check]
         permissions:
-            contents: read
-            packages: write
             attestations: write
+            contents: read
             id-token: write
-
-        env:
-            REGISTRY: ghcr.io
-            IMAGE_NAME: ${{github.repository}}
+            packages: write
+        runs-on: ubuntu-latest
 
         steps:
             - name: Log in to the Container registry
               uses: docker/login-action@v3.4.0
               with:
+                password: ${{secrets.GITHUB_TOKEN}}
                 registry: ${{env.REGISTRY}}
                 username: ${{github.actor}}
-                password: ${{secrets.GITHUB_TOKEN}}
 
             - name: Set up Docker Buildx
               uses: docker/setup-buildx-action@v3
 
-            - name: Extract metadata (tags, labels) for Docker
-              id: docker-extract-metadata
+            - id: docker-extract-metadata
+              name: Extract metadata (tags, labels) for Docker
               uses: docker/metadata-action@v5.7.0
               with:
                 images: ${{env.REGISTRY}}/${{env.IMAGE_NAME}}
@@ -177,33 +180,33 @@ jobs:
                     type=semver,pattern={{major}}.{{minor}}
                     type=semver,pattern=v{{major}},enable=${{!startsWith(github.ref, 'refs/tags/v0.')}}
 
-            - name: Build and Publish
-              id: build-and-publish
+            - id: build-and-publish
+              name: Build and Publish
               uses: docker/build-push-action@v6
               with:
+                labels: ${{steps.docker-extract-metadata.outputs.labels}}
                 push: true
                 tags: ${{steps.docker-extract-metadata.outputs.tags}}
-                labels: ${{steps.docker-extract-metadata.outputs.labels}}
 
             - name: Generate Artifact Attestation
               uses: actions/attest-build-provenance@v2
               with:
-                subject-name: ${{env.REGISTRY}}/${{env.IMAGE_NAME}}
-                subject-digest: ${{steps.build-and-publish.outputs.digest}}
                 push-to-registry: true
+                subject-digest: ${{steps.build-and-publish.outputs.digest}}
+                subject-name: ${{env.REGISTRY}}/${{env.IMAGE_NAME}}
 
+    # yamllint disable-line rule:key-ordering
     release:
+        if: github.ref_type == 'tag'
         needs: [build-and-publish]
-        runs-on: ubuntu-latest
         permissions:
             contents: write
             id-token: write
-
-        if: github.ref_type == 'tag'
+        runs-on: ubuntu-latest
 
         steps:
-            - name: Create GitHub Release
-              env:
+            - env:
                 GITHUB_TOKEN: ${{ github.token }}
+              name: Create GitHub Release
               run: gh release create '${{ github.ref_name }}' --repo '${{github.repository}}' --verify-tag
                 --generate-notes
