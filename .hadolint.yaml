@@ -1,5 +1,5 @@
 failure-threshold: style
-strict-labels: true
 label-schema:
-    org.opencontainers.image.source: url
     org.opencontainers.image.licenses: spdx
+    org.opencontainers.image.source: url
+strict-labels: true
