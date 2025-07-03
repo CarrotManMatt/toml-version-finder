@@ -322,7 +322,7 @@ app: Starlette = Starlette(
         InvalidVersionFileContentError: InvalidVersionFileContentError.exception_handler,
         gidgethub.GitHubException: (
             lambda _request, exc: JSONResponse(
-                {"error_message": f"Github: {exc}"}, status_code=502
+                {"error_message": f"Github's response: {exc}"}, status_code=502
             )
         ),
         **{

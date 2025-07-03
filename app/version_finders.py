@@ -224,17 +224,13 @@ class PEP751VersionFinder(BaseVersionFinder):
 class VersionMap(Enum):
     """Known acceptable packages within known project locations."""
 
-    CSSUOB__TEX_BOT_PY_V2__PY_CORD = PoetryVersionFinder.shortcut_factory(
+    CSSUOB__TEX_BOT_PY_V2__PY_CORD = UVVersionFinder.shortcut_factory(
         file_fetcher=GitHubFileFetcher(owner="CSSUoB", repo="TeX-Bot-Py-V2"),
         package_name="py-cord",
     )
     CARROTMANMATT__FLAKE8_CARROT__FLAKE8 = UVVersionFinder.shortcut_factory(
         file_fetcher=GitHubFileFetcher(owner="CarrotManMatt", repo="flake8-carrot"),
         package_name="flake8",
-    )
-    CARROTMANMATT__SMART_SERVE__DJANGO = UVVersionFinder.shortcut_factory(
-        file_fetcher=GitHubFileFetcher(owner="CarrotManMatt", repo="SmartServe"),
-        package_name="django",
     )
     CARROTMANMATT__CCFT_PYMARKDOWN__PYMARKDOWNLNT = UVVersionFinder.shortcut_factory(
         file_fetcher=GitHubFileFetcher(owner="CarrotManMatt", repo="ccft-pymarkdown"),
