@@ -15,3 +15,4 @@ tests
 .venv
 .python-version
 .hadolint.yaml
+.yamllint.yaml
