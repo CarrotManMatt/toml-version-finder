@@ -16,7 +16,7 @@ repos:
           args: [--strict]
 
     - repo: https://github.com/renovatebot/pre-commit-hooks
-      rev: 41.23.5
+      rev: 41.37.5
       hooks:
         - id: renovate-config-validator
           args: [--strict]
@@ -78,7 +78,7 @@ repos:
           stages: [manual]
 
     - repo: https://github.com/astral-sh/ruff-pre-commit
-      rev: v0.12.2
+      rev: v0.12.3
       hooks:
         - id: ruff
           args: [--fix]
@@ -86,7 +86,7 @@ repos:
         - id: ruff-format
 
     - repo: https://github.com/astral-sh/uv-pre-commit
-      rev: 0.7.19
+      rev: 0.7.21
       hooks:
         - id: uv-lock
           always_run: true
