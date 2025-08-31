@@ -196,7 +196,7 @@ jobs:
                 tags: ${{steps.docker-extract-metadata.outputs.tags}}
 
             - name: Generate Artifact Attestation
-              uses: actions/attest-build-provenance@v2
+              uses: actions/attest-build-provenance@v3
               with:
                 push-to-registry: true
                 subject-digest: ${{steps.build-and-publish.outputs.digest}}
