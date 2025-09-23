@@ -754,22 +754,22 @@ deploy = [
     { name = "uvicorn-worker" },
 ]
 dev = [
-    { name = "mypy", specifier = ">=1.12" },
-    { name = "pre-commit" },
-    { name = "ruff", specifier = ">=0.4" },
+    { name = "mypy", specifier = ">=1.18.2" },
+    { name = "pre-commit", specifier = ">=4.0" },
+    { name = "ruff", specifier = ">=0.13" },
     { name = "uvicorn", extras = ["standard"] },
 ]
-lint-format = [{ name = "ruff", specifier = ">=0.4" }]
+lint-format = [{ name = "ruff", specifier = ">=0.13" }]
 main = [
     { name = "aiohttp" },
     { name = "gidgethub" },
     { name = "packaging" },
     { name = "pyyaml" },
     { name = "starlette" },
-    { name = "typed-classproperties", specifier = ">=1.1" },
+    { name = "typed-classproperties", specifier = ">=1.2" },
 ]
-pre-commit = [{ name = "pre-commit" }]
-type-check = [{ name = "mypy", specifier = ">=1.12" }]
+pre-commit = [{ name = "pre-commit", specifier = ">=4.0" }]
+type-check = [{ name = "mypy", specifier = ">=1.18.2" }]
 
 [[package]]
 name = "typed-classproperties"
