@@ -12,7 +12,7 @@ RUN --mount=type=cache,target=/root/.cache/uv \
 COPY LICENSE /app/
 COPY ./app /app
 
-FROM python:3.13-slim-bookworm
+FROM python:3.14-slim-bookworm
 
 # renovate: release=bookworm depName=curl
 ENV CURL_VERSION="7.88.*"
