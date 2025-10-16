@@ -6,7 +6,7 @@ dev = [
     { include-group = "pre-commit" },
     { include-group = "type-check" },
 ]
-lint-format = ["ruff>=0.13"]
+lint-format = ["flake8-carrot>=0.1.1", "ruff>=0.13"]
 main = [
     "aiohttp",
     "gidgethub",
@@ -20,7 +20,7 @@ type-check = ["mypy>=1.18.2"]
 
 [project] # TODO: Remove [project] table once https://github.com/astral-sh/uv/issues/8582 is completed
 name = "toml-version-finder"
-requires-python = "==3.13.*"
+requires-python = ">=3.14"
 version = "1.0.0"
 
 
