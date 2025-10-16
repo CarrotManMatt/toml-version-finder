@@ -8,7 +8,7 @@ if TYPE_CHECKING:
     from typing import Final, Literal
 
 
-__all__: "Sequence[str]" = (
+__all__: Sequence[str] = (
     "validate_owner",
     "validate_package_name",
     "validate_repo",
@@ -17,7 +17,7 @@ __all__: "Sequence[str]" = (
 
 def _validate_value(
     *, pattern: str, value: str, name: str, ignore_case: bool = False
-) -> "Literal[True]":
+) -> Literal[True]:
     if not pattern.startswith(r"\A"):
         pattern = rf"\A{pattern}"
 
@@ -31,17 +31,17 @@ def _validate_value(
     return True
 
 
-def validate_owner(owner: str) -> "Literal[True]":
+def validate_owner(owner: str) -> Literal[True]:
     """Ensure the given string is a valid Git repository owner name."""
     return _validate_value(pattern=r"\A[a-zA-Z0-9\-._]+\Z", value=owner, name="owner")
 
 
-def validate_repo(repo: str) -> "Literal[True]":
+def validate_repo(repo: str) -> Literal[True]:
     """Ensure the given string is a valid Git repository project name."""
     return _validate_value(pattern=r"\A[a-zA-Z0-9\-._]+\Z", value=repo, name="repo")
 
 
-def validate_package_name(package_name: str) -> "Literal[True]":
+def validate_package_name(package_name: str) -> Literal[True]:
     """Ensure the given string is a valid package name."""
     return _validate_value(
         pattern=r"\A[A-Z0-9]|[A-Z0-9][A-Z0-9._-]*[A-Z0-9]\Z",

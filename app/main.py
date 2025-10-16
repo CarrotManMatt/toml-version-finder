@@ -32,11 +32,11 @@ if TYPE_CHECKING:
     from starlette.responses import Response
 
 
-__all__: "Sequence[str]" = ("app",)
+__all__: Sequence[str] = ("app",)
 
 
 def _version_file_from_url(
-    request_path_params: "Mapping[str, object]",
+    request_path_params: Mapping[str, object],
 ) -> version_finders.VersionMap:
     owner: str = _parse_value_from_path_params(request_path_params, "owner")
     validate_owner(owner)
@@ -57,7 +57,7 @@ def _version_file_from_url(
 
 
 def _parse_value_from_path_params(
-    request_path_params: "Mapping[str, object]", param_name: str
+    request_path_params: Mapping[str, object], param_name: str
 ) -> str:
     value: object | None = request_path_params.get(param_name, None)
     if value is None or not isinstance(value, str):
@@ -74,7 +74,7 @@ class _TOMLFindVersionEndpoint:
     def __init__(self, file_type: str) -> None:
         self.file_type: str = file_type
 
-    async def __call__(self, request: "Request") -> "Response":
+    async def __call__(self, request: Request) -> Response:
         """
         summary: Retrieve the specific version of a package in a project from a known TOML file
         parameters:
@@ -245,7 +245,7 @@ class _TOMLFindVersionEndpoint:
         )
 
 
-async def _healthcheck_endpoint(_request: "Request") -> "Response":
+async def _healthcheck_endpoint(_request: Request) -> Response:
     """
     summary: Retrieve a simple response for whether the application is alive
     responses:

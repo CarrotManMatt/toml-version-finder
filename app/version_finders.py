@@ -28,7 +28,7 @@ if TYPE_CHECKING:
     from file_fetchers import BaseFileFetcher
 
 
-__all__: "Sequence[str]" = (
+__all__: Sequence[str] = (
     "BaseVersionFinder",
     "PEP751VersionFinder",
     "PoetryVersionFinder",
@@ -43,10 +43,10 @@ class BaseVersionFinder(abc.ABC):
     def __init__(
         self,
         *,
-        lock_file_fetcher: "BaseFileFetcher",
-        lock_subdirectory: "PurePosixPath | None" = None,
-        pep621_file_fetcher: "BaseFileFetcher",
-        pep621_subdirectory: "PurePosixPath | None" = None,
+        lock_file_fetcher: BaseFileFetcher,
+        lock_subdirectory: PurePosixPath | None = None,
+        pep621_file_fetcher: BaseFileFetcher,
+        pep621_subdirectory: PurePosixPath | None = None,
         package_name: str,
     ) -> None:
         self._lock_file_fetcher: BaseFileFetcher = lock_file_fetcher
@@ -69,10 +69,10 @@ class BaseVersionFinder(abc.ABC):
     def shortcut_factory(
         cls,
         *,
-        file_fetcher: "BaseFileFetcher",
-        subdirectory: "PurePosixPath | None" = None,
+        file_fetcher: BaseFileFetcher,
+        subdirectory: PurePosixPath | None = None,
         package_name: str,
-    ) -> "Self":
+    ) -> Self:
         """Retrieve a partially initialised version finder with the given arguments."""
         return cls(
             lock_file_fetcher=file_fetcher,
@@ -132,14 +132,14 @@ class BaseVersionFinder(abc.ABC):
         """
 
     @property
-    def lock_file_path(self) -> "PurePosixPath":
+    def lock_file_path(self) -> PurePosixPath:
         """The location of this version finder's lock file."""
         return (
             PurePosixPath("/") if self._lock_subdirectory is None else self._lock_subdirectory
         ) / self._LOCK_FILE_NAME
 
     @property
-    def pep621_file_path(self) -> "PurePosixPath":
+    def pep621_file_path(self) -> PurePosixPath:
         """
         The location of this version finder's PEP621 pyproject.toml file.
 

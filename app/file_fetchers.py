@@ -17,7 +17,7 @@ if TYPE_CHECKING:
     from typing import Final, TypedDict
 
 
-__all__: "Sequence[str]" = (
+__all__: Sequence[str] = (
     "BaseFileFetcher",
     "GitHubFileFetcher",
 )
@@ -27,7 +27,7 @@ class BaseFileFetcher(abc.ABC):
     """Fetcher callable to fetch a chosen file from a known location."""
 
     @abc.abstractmethod
-    async def __call__(self, content_file: "PurePosixPath") -> str:
+    async def __call__(self, content_file: PurePosixPath) -> str:
         """Fetch the selected file using a subclass's fetching implementation."""
 
 
@@ -49,7 +49,7 @@ class GitHubFileFetcher(BaseFileFetcher):
         self._repo: str = repo
 
     @override
-    async def __call__(self, content_file: "PurePosixPath") -> str:
+    async def __call__(self, content_file: PurePosixPath) -> str:
         if not content_file.is_absolute():
             NON_ABSOLUTE_PATH_MESSAGE: Final[str] = (
                 "Given 'content_file' must be an absolute path."

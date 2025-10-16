@@ -14,7 +14,7 @@ if TYPE_CHECKING:
     from file_fetchers import BaseFileFetcher
     from version_finders import BaseVersionFinder
 
-__all__: "Sequence[str]" = (
+__all__: Sequence[str] = (
     "BaseUnknownPathParameterError",
     "BaseUnsupportedError",
     "InvalidVersionFileContentError",
@@ -47,7 +47,7 @@ class _BaseCustomException(Exception, abc.ABC):
     def STATUS_CODE(cls) -> int:
         """HTTP status code to use when returning this exception as an error response."""
 
-    def _get_additional_details(self) -> "Mapping[str, object]":
+    def _get_additional_details(self) -> Mapping[str, object]:
         """Create the content to be used when converting this exception to an HTTP response."""
         return {}
 
@@ -56,7 +56,7 @@ class _BaseCustomException(Exception, abc.ABC):
         return self.message
 
     @classmethod
-    def exception_handler(cls, _request: "Request", exc: Exception) -> "JSONResponse":
+    def exception_handler(cls, _request: Request, exc: Exception) -> JSONResponse:
         """Starlette exception handler to return a correct HTTP response for this exception."""
         if not isinstance(exc, cls):
             raise TypeError
@@ -115,7 +115,7 @@ class UnknownFileTypeError(BaseUnknownPathParameterError):
         self._unknown_value = __value
 
     @override
-    def _get_additional_details(self) -> "Mapping[str, object]":
+    def _get_additional_details(self) -> Mapping[str, object]:
         return {"file_type": self.file_type}
 
 
@@ -156,17 +156,17 @@ class UnsupportedVersionFinderError(_UnsupportedClassError["BaseVersionFinder"])
     def __init__(
         self,
         message: str | None = None,
-        version_finder: type["BaseVersionFinder"] | None = None,
+        version_finder: type[BaseVersionFinder] | None = None,
     ) -> None:
         super().__init__(message=message, unsupported_class=version_finder)
 
     @property
-    def version_finder(self) -> type["BaseVersionFinder"] | None:
+    def version_finder(self) -> type[BaseVersionFinder] | None:
         """The VersionFinder class that is unsupported."""
         return self._unsupported_class
 
     @version_finder.setter
-    def version_finder(self, __value: type["BaseVersionFinder"], /) -> None:
+    def version_finder(self, __value: type[BaseVersionFinder], /) -> None:
         self._unsupported_class = __value
 
     @classproperty
@@ -175,7 +175,7 @@ class UnsupportedVersionFinderError(_UnsupportedClassError["BaseVersionFinder"])
         return "Unsupported version finder."
 
     @override
-    def _get_additional_details(self) -> "Mapping[str, object]":
+    def _get_additional_details(self) -> Mapping[str, object]:
         return (
             {
                 "version_finder_name": self.version_finder.__name__,
@@ -193,17 +193,17 @@ class UnsupportedFileFetcherError(_UnsupportedClassError["BaseFileFetcher"]):
     def __init__(
         self,
         message: str | None = None,
-        file_fetcher: type["BaseFileFetcher"] | None = None,
+        file_fetcher: type[BaseFileFetcher] | None = None,
     ) -> None:
         super().__init__(message=message, unsupported_class=file_fetcher)
 
     @property
-    def file_fetcher(self) -> type["BaseFileFetcher"] | None:
+    def file_fetcher(self) -> type[BaseFileFetcher] | None:
         """The FileFetcher class that is unsupported."""
         return self._unsupported_class
 
     @file_fetcher.setter
-    def file_fetcher(self, __value: type["BaseFileFetcher"], /) -> None:
+    def file_fetcher(self, __value: type[BaseFileFetcher], /) -> None:
         self._unsupported_class = __value
 
     @classproperty
@@ -212,7 +212,7 @@ class UnsupportedFileFetcherError(_UnsupportedClassError["BaseFileFetcher"]):
         return "Unsupported file fetcher."
 
     @override
-    def _get_additional_details(self) -> "Mapping[str, object]":
+    def _get_additional_details(self) -> Mapping[str, object]:
         return (
             {
                 "file_fetcher_name": self.file_fetcher.__name__,
@@ -261,7 +261,7 @@ class InvalidVersionFileEncodingError(InvalidVersionFileContentError):
         )
 
     @override
-    def _get_additional_details(self) -> "Mapping[str, object]":
+    def _get_additional_details(self) -> Mapping[str, object]:
         return (
             {"encoding": self.encoding} if self.encoding else super()._get_additional_details()
         )
@@ -298,7 +298,7 @@ class MissingPackageInVersionFileError(InvalidVersionFileContentError):
         )
 
     @override
-    def _get_additional_details(self) -> "Mapping[str, object]":
+    def _get_additional_details(self) -> Mapping[str, object]:
         return (
             {"package_name": self.package_name}
             if self.package_name
