@@ -68,7 +68,7 @@ class GitHubFileFetcher(BaseFileFetcher):
         if response["encoding"] != "base64":
             raise InvalidVersionFileEncodingError(encoding=response["encoding"])
 
-        if not isinstance(response["content"], str | bytes):
+        if not isinstance(response["content"], (str, bytes)):
             raise InvalidVersionFileContentError
 
         return base64.b64decode(response["content"]).decode()

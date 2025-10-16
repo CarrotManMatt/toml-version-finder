@@ -23,6 +23,30 @@ jobs:
               run: uv lock --check
 
     # yamllint disable-line rule:key-ordering
+    flake8:
+        env:
+            UV_FROZEN: true
+            UV_NO_SYNC: true
+            UV_PYTHON_DOWNLOADS: never
+        runs-on: ubuntu-latest
+
+        steps:
+            - uses: actions/checkout@v5
+
+            - name: Set Up Python
+              uses: actions/setup-python@v6
+              with:
+                python-version-file: .python-version
+
+            - name: Install uv
+              uses: astral-sh/setup-uv@v7
+              with:
+                enable-cache: true
+
+            - name: Run Flake8
+              run: uvx --with flake8-carrot -- flake8
+
+    # yamllint disable-line rule:key-ordering
     mypy:
         env:
             UV_FROZEN: true

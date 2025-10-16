@@ -12,6 +12,7 @@ if TYPE_CHECKING:
 
 __all__: "Sequence[str]" = ("DEBUG", "GITHUB_API_KEY")
 
+
 with warnings.catch_warnings(action="ignore", category=UserWarning):
     config: Config = Config(".env")
 

@@ -84,7 +84,8 @@ class BaseVersionFinder(abc.ABC):
 
     @classmethod
     @abc.abstractmethod
-    async def _parse_lock(cls, *, raw_lock_contents: str, package_name: str) -> str: ...
+    async def _parse_lock(cls, *, raw_lock_contents: str, package_name: str) -> str:
+        pass
 
     @final
     async def parse_lock(self) -> str:

@@ -1,7 +1,7 @@
 """Primary HTTP response generation functionality."""
 
 import re
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, override
 
 import aiohttp
 import gidgethub
@@ -70,6 +70,7 @@ def _parse_value_from_path_params(
 
 
 class _TOMLFindVersionEndpoint:
+    @override
     def __init__(self, file_type: str) -> None:
         self.file_type: str = file_type
 
@@ -273,7 +274,7 @@ async def _healthcheck_endpoint(_request: "Request") -> "Response":
                 error_message:
                   description: The reason for the encountered problem
                   type: string
-    """  # noqa: D205,D415
+    """  # noqa: D205, D415
     session: object
     async with aiohttp.ClientSession(conn_timeout=config.GITHUB_API_TIMEOUT) as session:
         github_client: GitHubAPI = GitHubAPI(
