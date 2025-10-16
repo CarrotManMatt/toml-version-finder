@@ -23,7 +23,7 @@ jobs:
               run: uv lock --check
 
     # yamllint disable-line rule:key-ordering
-    flake8:
+    flake8:  # TODO: Move to local dependencies once Python 3.14 is supported
         env:
             UV_FROZEN: true
             UV_NO_SYNC: true
