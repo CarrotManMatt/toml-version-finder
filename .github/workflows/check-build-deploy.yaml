@@ -36,7 +36,7 @@ jobs:
             - name: Set Up Python
               uses: actions/setup-python@v6
               with:
-                python-version-file: .python-version
+                python-version: 3.14
 
             - name: Install uv
               uses: astral-sh/setup-uv@v7
@@ -44,7 +44,7 @@ jobs:
                 enable-cache: true
 
             - name: Run Flake8
-              run: uvx --with flake8-carrot -- flake8
+              run: uvx --python 3.14 --with flake8-carrot -- flake8
 
     # yamllint disable-line rule:key-ordering
     mypy:
