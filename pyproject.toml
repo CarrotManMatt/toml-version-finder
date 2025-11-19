@@ -1,28 +1,27 @@
+[project]  # TODO: Remove [project] table once https://github.com/astral-sh/uv/issues/8582 is completed
+name = "toml-version-finder"
+version = "1.0.0"
+requires-python = ">=3.14"
+
 [dependency-groups]
-deploy = ["gunicorn>=19.7", "uvicorn-worker"]
 dev = [
     "uvicorn[standard]",
     { include-group = "lint-format" },
     { include-group = "pre-commit" },
-    { include-group = "type-check" },
+    { include-group = "type-check" }
 ]
-lint-format = ["flake8-carrot>=0.1.1", "ruff>=0.13"]
+deploy = ["gunicorn>=19.7", "uvicorn-worker"]
+lint-format = ["flake8-carrot>=0.1.1", "ruff>=0.13", "tombi>=0.6.42"]
 main = [
     "aiohttp",
     "gidgethub",
     "packaging",
     "pyyaml",
     "starlette",
-    "typed_classproperties>=1.2",
+    "typed_classproperties>=1.2"
 ]
 pre-commit = ["pre-commit>=4.0"]
 type-check = ["mypy>=1.18.2"]
-
-[project] # TODO: Remove [project] table once https://github.com/astral-sh/uv/issues/8582 is completed
-name = "toml-version-finder"
-requires-python = ">=3.14"
-version = "1.0.0"
-
 
 [tool.mypy]
 check_untyped_defs = true
@@ -46,21 +45,19 @@ enable_error_code = [
     "redundant-self",
     "truthy-bool",
     "truthy-iterable",
-    "unused-awaitable",
+    "unused-awaitable"
 ]
 extra_checks = true
 no_implicit_reexport = true
+strict_bytes = true
 strict_equality = true
+strict_equality_for_none = true  # tombi: lint.rules.key-not-allowed.disabled = true
 warn_redundant_casts = true
 warn_return_any = true
 warn_unreachable = true
 warn_unused_configs = true
 warn_unused_ignores = true
-
-[[tool.mypy.overrides]]
-ignore_missing_imports = true
-module = ["aiohttp"]
-
+warn_incomplete_stub = true
 
 [tool.ruff]
 indent-width = 4
@@ -97,7 +94,7 @@ ignore = [
     "SIM910",
     "TD002",
     "TD003",
-    "W191",
+    "W191"
 ]
 select = ["ALL", "D204", "D213", "D401"]
 task-tags = ["BUG", "DONE", "FIXME", "HACK", "IDEA", "ISSUE", "NOBUG", "NOTE", "REQ", "TODO"]
@@ -117,13 +114,13 @@ known-first-party = [
     "file_fetchers",
     "main",
     "validators",
-    "version_finders",
+    "version_finders"
 ]
 
 [tool.ruff.lint.pep8-naming]
 classmethod-decorators = [
     "typed_classproperties.cached_classproperty",
-    "typed_classproperties.classproperty",
+    "typed_classproperties.classproperty"
 ]
 extend-ignore-names = [
     "BROKEN_*_MESSAGE",
@@ -132,7 +129,7 @@ extend-ignore-names = [
     "NO_*_MESSAGE",
     "STATUS_CODE",
     "_BaseCustomException",
-    "_LOCK_FILE_NAME",
+    "_LOCK_FILE_NAME"
 ]
 
 [tool.ruff.lint.pycodestyle]
@@ -143,7 +140,7 @@ max-doc-length = 95
 convention = "google"
 property-decorators = [
     "typed_classproperties.cached_classproperty",
-    "typed_classproperties.classproperty",
+    "typed_classproperties.classproperty"
 ]
 
 [tool.ruff.lint.pylint]
@@ -154,6 +151,10 @@ max-returns = 10
 
 [tool.ruff.lint.pyupgrade]
 keep-runtime-typing = true
+
+[tool.tombi.format.rules]
+indent-width = 4
+line-width = 95
 
 [tool.uv]
 default-groups = ["dev", "main"]
