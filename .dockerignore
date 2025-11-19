@@ -10,7 +10,6 @@ pyproject.toml
 tests
 .gitlint
 .pre-commit-config.yaml
-.taplo.toml
 .yamlfmt.yaml
 .venv
 .python-version
