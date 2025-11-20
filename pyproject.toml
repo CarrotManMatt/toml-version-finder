@@ -11,7 +11,7 @@ dev = [
     { include-group = "type-check" }
 ]
 deploy = ["gunicorn>=19.7", "uvicorn-worker"]
-lint-format = ["flake8-carrot>=0.1.1", "ruff>=0.13", "tombi>=0.6.42"]
+lint-format = ["flake8-carrot>=0.1.1", "ruff>=0.13"]
 main = [
     "aiohttp",
     "gidgethub",

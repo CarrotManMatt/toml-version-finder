@@ -666,28 +666,6 @@ wheels = [
 ]
 
 [[package]]
-name = "tombi"
-version = "0.6.42"
-source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/05/51/036d6a66f08c76bb313db67a4a64a8450f1e6593d4dd65a195a3abaccaaf/tombi-0.6.42.tar.gz", hash = "sha256:5468db422e59a80ec27b3e097feab1e663514c516a6a174715f7a596152780b9", size = 426002, upload-time = "2025-11-11T11:19:11.137Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/00/58/985f9cd17ba45f1b712665901d192c31181fbf5695565dc6df631eed70bf/tombi-0.6.42-py3-none-macosx_10_12_x86_64.whl", hash = "sha256:00641358f2402a50935ba25d7825825866bdd2375f7570d0b53e11be198f7d8a", size = 8759380, upload-time = "2025-11-08T03:45:00.628Z" },
-    { url = "https://files.pythonhosted.org/packages/e6/68/ce3aee8c6eef3c7cb0eef934b04d57ffb5de5fc593ada830103eefcd1871/tombi-0.6.42-py3-none-macosx_11_0_arm64.whl", hash = "sha256:779ff9b2b8c9132c969a74e17c04bde4785b4b65cdc655b29fc5e6ca40ab1fda", size = 8390022, upload-time = "2025-11-08T03:44:59.045Z" },
-    { url = "https://files.pythonhosted.org/packages/72/1a/d70b2605fa3e02e0e2b246ea1ea99344db18ae6564f6a44c7368779c312b/tombi-0.6.42-py3-none-manylinux_2_17_armv7l.manylinux2014_armv7l.whl", hash = "sha256:18444c35e71caaeecd53aad407b30553de4eda3abbecf863f15a0835884e7c3b", size = 8647915, upload-time = "2025-11-08T03:44:49.316Z" },
-    { url = "https://files.pythonhosted.org/packages/53/2e/d41ec2d6a554a2edd410292238661012347bd7f8554d9d5bd59f4172469e/tombi-0.6.42-py3-none-manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:acafc88209a2ccde33f4c786e2cca0ab7d2fa1c3e6c4e565bd4a01de329f570a", size = 9749004, upload-time = "2025-11-08T03:44:55.26Z" },
-    { url = "https://files.pythonhosted.org/packages/f0/a4/b1d221ca245733aaebb09629bad767b45b30d618ff5236a131a8d2220e77/tombi-0.6.42-py3-none-manylinux_2_17_ppc64le.manylinux2014_ppc64le.whl", hash = "sha256:3bd23ffa0d907496fe266c9f37b039e6aa21925883318335ccc89dc753acaa50", size = 9902491, upload-time = "2025-11-08T03:44:51.358Z" },
-    { url = "https://files.pythonhosted.org/packages/d4/6c/ed9aad334bc9486c6f5157594e1e1c8c016854d56484d9a47f308ec0a158/tombi-0.6.42-py3-none-manylinux_2_17_s390x.manylinux2014_s390x.whl", hash = "sha256:92d2d7fa3bd9b11af4dee99ddfe506e056ee551ec618c725cc19e1e2ad6336db", size = 8824694, upload-time = "2025-11-08T03:44:53.363Z" },
-    { url = "https://files.pythonhosted.org/packages/5d/4d/eac936c53004cefb456b3d1b450ac33e40c4b436ee226371caf254d876bf/tombi-0.6.42-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:3e8a3925813fe4a1348e9e3527e2472d53f988afb8db3be1f552cb0142de71f6", size = 9066607, upload-time = "2025-11-08T03:44:56.912Z" },
-    { url = "https://files.pythonhosted.org/packages/71/f9/df16f631f4b21eed7c01c08dfb20ca8766ec6beb378698f9f255866c4328/tombi-0.6.42-py3-none-manylinux_2_28_aarch64.whl", hash = "sha256:bc53d0baa05fa6e263a3da47d7c63f0c5a012d8b7640b40da8400d138cfefa25", size = 8884940, upload-time = "2025-11-08T03:44:42.266Z" },
-    { url = "https://files.pythonhosted.org/packages/b4/c9/54ff25059322e3b7752b0c5656d0f21f646ebacd8a57e882d4c666648fb4/tombi-0.6.42-py3-none-musllinux_1_2_aarch64.whl", hash = "sha256:9c9e2c68246de19c70b0a9f3f9bc19f5f51be527b09da7cef48e8e6321c14ef4", size = 8881100, upload-time = "2025-11-11T11:19:04.259Z" },
-    { url = "https://files.pythonhosted.org/packages/7a/14/f4c8eef75642b3916d1275d3c2d6c632b8e1e23568253100c37a62f68323/tombi-0.6.42-py3-none-musllinux_1_2_armv7l.whl", hash = "sha256:bd5dffb6e97a5fd0c998440a25a5a3cb7dab268ba000676aeb6df76cc127ea3c", size = 8660294, upload-time = "2025-11-11T11:19:06.081Z" },
-    { url = "https://files.pythonhosted.org/packages/6e/81/4727a30b1fefb9e81efb694d8c0356ad313458162e9017e3c70cb6a6e8aa/tombi-0.6.42-py3-none-musllinux_1_2_i686.whl", hash = "sha256:0b2a66fc2ec7de0f902a8a920528d80b84496dc37cd590db5e1ece7e7784810a", size = 9211047, upload-time = "2025-11-11T11:19:07.982Z" },
-    { url = "https://files.pythonhosted.org/packages/4f/11/18145363b7b08807b826576788475f584bcbb14f5d3ddb1b8b44d993eb95/tombi-0.6.42-py3-none-musllinux_1_2_x86_64.whl", hash = "sha256:ee24231fe5c4cfbb8f0293a84a1a3b0a859a1a890fecaad9303465f211a321b3", size = 9310043, upload-time = "2025-11-11T11:19:09.622Z" },
-    { url = "https://files.pythonhosted.org/packages/24/43/b6114cab9492d448cb0f5810e7556ed2deca29e31e74b2202da95be405ab/tombi-0.6.42-py3-none-win32.whl", hash = "sha256:d18c50052c3afa1ad0f5868e229530792c3c78ac15268fab0d9fea4385301d13", size = 6913717, upload-time = "2025-11-11T11:19:14.011Z" },
-    { url = "https://files.pythonhosted.org/packages/48/46/a5e40284bdae4f7a5b040f8807e00a62e3461e35c118a9fafcbe52a97364/tombi-0.6.42-py3-none-win_amd64.whl", hash = "sha256:dc3092a1bdfbfd5cdf01e66945e6de0a1408aa1b5b7847aee938d62674edd15b", size = 7890213, upload-time = "2025-11-11T11:19:12.337Z" },
-]
-
-[[package]]
 name = "toml-version-finder"
 version = "1.0.0"
 source = { virtual = "." }
@@ -702,13 +680,11 @@ dev = [
     { name = "mypy" },
     { name = "pre-commit" },
     { name = "ruff" },
-    { name = "tombi" },
     { name = "uvicorn", extra = ["standard"] },
 ]
 lint-format = [
     { name = "flake8-carrot" },
     { name = "ruff" },
-    { name = "tombi" },
 ]
 main = [
     { name = "aiohttp" },
@@ -722,7 +698,6 @@ pre-commit = [
     { name = "flake8-carrot" },
     { name = "pre-commit" },
     { name = "ruff" },
-    { name = "tombi" },
 ]
 type-check = [
     { name = "mypy" },
@@ -740,13 +715,11 @@ dev = [
     { name = "mypy", specifier = ">=1.18.2" },
     { name = "pre-commit", specifier = ">=4.0" },
     { name = "ruff", specifier = ">=0.13" },
-    { name = "tombi", specifier = ">=0.6.42" },
     { name = "uvicorn", extras = ["standard"] },
 ]
 lint-format = [
     { name = "flake8-carrot", specifier = ">=0.1.1" },
     { name = "ruff", specifier = ">=0.13" },
-    { name = "tombi", specifier = ">=0.6.42" },
 ]
 main = [
     { name = "aiohttp" },
@@ -760,7 +733,6 @@ pre-commit = [
     { name = "flake8-carrot", specifier = ">=0.1.1" },
     { name = "pre-commit", specifier = ">=4.0" },
     { name = "ruff", specifier = ">=0.13" },
-    { name = "tombi", specifier = ">=0.6.42" },
 ]
 type-check = [{ name = "mypy", specifier = ">=1.18.2" }]
 
