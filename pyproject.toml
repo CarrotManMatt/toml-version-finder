@@ -20,7 +20,7 @@ main = [
     "starlette",
     "typed_classproperties>=1.2"
 ]
-pre-commit = ["pre-commit>=4.0"]
+pre-commit = ["pre-commit>=4.0", { include-group = "lint-format" }]
 type-check = ["mypy>=1.18.2"]
 
 [tool.mypy]
