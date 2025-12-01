@@ -11,7 +11,7 @@ dev = [
     { include-group = "type-check" }
 ]
 deploy = ["gunicorn>=19.7", "uvicorn-worker"]
-lint-format = ["flake8-carrot>=0.1.1", "ruff>=0.13"]
+lint-format = ["flake8-carrot>=0.1.1", "flake8-pyproject>=1.2", "ruff>=0.13"]
 main = [
     "aiohttp",
     "gidgethub",
@@ -22,6 +22,11 @@ main = [
 ]
 pre-commit = ["pre-commit>=4.0", { include-group = "lint-format" }]
 type-check = ["mypy>=1.18.2"]
+
+[tool.flake8]
+select = ["CAR"]
+extend_exclude = [".venv/"]
+require_plugins = ["flake8-carrot"]
 
 [tool.mypy]
 check_untyped_defs = true
