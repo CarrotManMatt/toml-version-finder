@@ -4,6 +4,11 @@ default_language_version:
 default_stages: [pre-commit, pre-merge-commit, manual]
 
 repos:
+    - repo: https://github.com/rhysd/actionlint
+      rev: v1.7.9
+      hooks:
+        - id: actionlint
+
     - repo: https://github.com/dotenv-linter/dotenv-linter
       rev: v4.0.0
       hooks:
@@ -26,17 +31,6 @@ repos:
       hooks:
         - id: renovate-config-validator
           args: [--strict]
-
-    - repo: https://github.com/python-jsonschema/check-jsonschema
-      rev: 0.35.0
-      hooks:
-        - id: check-github-workflows
-
-        - id: check-jsonschema
-          args: [--schemafile, 'https://json.schemastore.org/yamllint.json']  # yamllint disable-line rule:quoted-strings
-          files: ^\.yamllint\.yaml$  # yamllint disable-line rule:key-ordering
-          name: Check yamllint configuration file
-          types: [yaml]
 
     - repo: https://github.com/jorisroovers/gitlint
       rev: v0.19.1
