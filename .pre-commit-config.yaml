@@ -4,6 +4,12 @@ default_language_version:
 default_stages: [pre-commit, pre-merge-commit, manual]
 
 repos:
+    - repo: https://github.com/dotenv-linter/dotenv-linter
+      rev: v4.0.0
+      hooks:
+        - id: dotenv-linter
+          args: [fix, --no-backup]
+
     - repo: https://github.com/AleksaC/hadolint-py
       rev: v2.14.0
       hooks:
