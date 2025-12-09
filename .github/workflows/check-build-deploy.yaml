@@ -77,7 +77,7 @@ jobs:
             - id: store-hashed-python-version
               name: Store Hashed Python Version
               run: echo "hashed_python_version=$(uv run -- python -VV | sha256sum | cut -d' ' -f1)"
-                >> $GITHUB_OUTPUT
+                >> "$GITHUB_OUTPUT"
 
             - uses: actions/cache@v4
               with:
@@ -121,7 +121,7 @@ jobs:
             - id: store-hashed-python-version
               name: Store Hashed Python Version
               run: echo "hashed_python_version=$(uv run -- python -VV | sha256sum | cut -d' ' -f1)"
-                >> $GITHUB_OUTPUT
+                >> "$GITHUB_OUTPUT"
 
             - uses: actions/cache@v4
               with:
@@ -132,7 +132,7 @@ jobs:
               run: uv run -- pre-commit install-hooks
 
             - name: Save pre-commit Checks Which Require Skipping
-              run: echo "SKIP=check-github-workflows,flake8,ruff-check,uv-lock" >> $GITHUB_ENV
+              run: echo "SKIP=check-github-workflows,flake8,ruff-check,uv-lock" >> "$GITHUB_ENV"
 
             - name: Run pre-commit
               run: uv run -- pre-commit run --all-files --hook-stage manual  # TODO: Add GitHub workflows output format
@@ -167,7 +167,7 @@ jobs:
             - id: store-hashed-python-version
               name: Store Hashed Python Version
               run: echo "hashed_python_version=$(uv run -- python -VV | sha256sum | cut -d' ' -f1)"
-                >> $GITHUB_OUTPUT
+                >> "$GITHUB_OUTPUT"
 
             - uses: actions/cache@v4
               with:
