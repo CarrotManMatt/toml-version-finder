@@ -84,8 +84,8 @@ jobs:
                 key: mypy|${{steps.store-hashed-python-version.outputs.hashed_python_version}}
                 path: ./.mypy_cache
 
-            - name: Run mypy
-              run: uv run -- mypy .  # TODO: Add GitHub workflows output format
+            - name: Run mypy  # TODO: Add GitHub workflows output format
+              run: uv run -- mypy .
 
     # yamllint disable-line rule:key-ordering
     pre-commit:
@@ -135,7 +135,12 @@ jobs:
               run: echo "SKIP=check-github-workflows,flake8,ruff-check,uv-lock" >> "$GITHUB_ENV"
 
             - name: Run pre-commit
-              run: uv run -- pre-commit run --all-files --hook-stage manual  # TODO: Add GitHub workflows output format
+              run: |
+                set -o pipefail
+                uv run -- pre-commit run --all-files --hook-stage manual | tee /tmp/pre-commit.log
+
+            - name: Ensure No Warnings
+              run: if grep -q "\[WARNING\]" /tmp/pre-commit.log; then exit 1; fi
 
             - if: ${{!cancelled()}}
               uses: pre-commit-ci/lite-action@v1.1.0
