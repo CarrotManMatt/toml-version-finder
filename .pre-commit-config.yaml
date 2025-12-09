@@ -33,6 +33,15 @@ repos:
         - id: renovate-config-validator
           args: [--strict]
 
+    - repo: https://github.com/python-jsonschema/check-jsonschema
+      rev: 0.35.0
+      hooks:
+        - id: check-jsonschema
+          args: [--schemafile, 'https://json.schemastore.org/yamllint.json']  # yamllint disable-line rule:quoted-strings
+          files: ^\.yamllint\.yaml$  # yamllint disable-line rule:key-ordering
+          name: Check yamllint configuration file
+          types: [yaml]
+
     - repo: https://github.com/jorisroovers/gitlint
       rev: v0.19.1
       hooks:
