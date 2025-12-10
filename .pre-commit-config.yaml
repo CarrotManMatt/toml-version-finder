@@ -8,6 +8,7 @@ repos:
       rev: v1.7.9
       hooks:
         - id: actionlint
+          additional_dependencies: [github.com/wasilibs/go-shellcheck/cmd/shellcheck@latest]  # yamllint disable-line rule:key-ordering
           args: [-pyflakes=]
 
     - repo: https://github.com/dotenv-linter/dotenv-linter
