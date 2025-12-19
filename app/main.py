@@ -263,7 +263,7 @@ async def _healthcheck_endpoint(_request: Request) -> Response:
                   enum: [OK]
       502:
         description: >-
-          The connection to to the GitHub API is unavailable or incorrectly configured
+          The connection to the GitHub API is unavailable or incorrectly configured
         content:
           application/json:
             schema:
@@ -332,10 +332,7 @@ app: Starlette = Starlette(
                     {"error_message": f"Proxy: {exc}"}, status_code=502
                 )
             )
-            for exception in (
-                aiohttp.client_exceptions.ConnectionTimeoutError,
-                aiohttp.client_exceptions.ClientConnectorDNSError,
-            )
+            for exception in (aiohttp.ConnectionTimeoutError, aiohttp.ClientConnectorDNSError)
         },
         BaseUnknownPathParameterError: BaseUnknownPathParameterError.exception_handler,
     },
