@@ -698,7 +698,6 @@ type-check = [
 ]
 
 [package.metadata]
-
 [package.metadata.requires-dev]
 deploy = [
     { name = "gunicorn", specifier = ">=19.7" },
