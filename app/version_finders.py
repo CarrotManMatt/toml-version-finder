@@ -7,7 +7,7 @@ from collections.abc import Iterable, Mapping
 from enum import Enum
 from pathlib import PurePosixPath
 from tomllib import TOMLDecodeError
-from typing import TYPE_CHECKING, final, override
+from typing import TYPE_CHECKING, cast, final, override
 
 from packaging.requirements import Requirement
 from typed_classproperties import classproperty
@@ -104,7 +104,9 @@ class BaseVersionFinder(abc.ABC):
         if project_contents is None or not isinstance(project_contents, Mapping):
             raise InvalidVersionFileContentError
 
-        dependencies: object | None = project_contents.get("dependencies", None)
+        dependencies: object | None = cast("Mapping[str, object]", project_contents).get(
+            "dependencies", None
+        )
 
         if dependencies is None or not isinstance(dependencies, Iterable):
             raise InvalidVersionFileContentError
@@ -179,7 +181,9 @@ class PoetryVersionFinder(BaseVersionFinder):
             if not isinstance(current_package, Mapping):
                 continue
 
-            current_package_name: object | None = current_package.get("name", None)
+            current_package_name: object | None = cast(
+                "Mapping[str, object]", current_package
+            ).get("name", None)
 
             if (
                 current_package_name is None
@@ -188,7 +192,9 @@ class PoetryVersionFinder(BaseVersionFinder):
             ):
                 continue
 
-            current_package_version: object | None = current_package.get("version", None)
+            current_package_version: object | None = cast(
+                "Mapping[str, object]", current_package
+            ).get("version", None)
 
             if current_package_version is None or not isinstance(current_package_version, str):
                 raise InvalidVersionFileContentError
