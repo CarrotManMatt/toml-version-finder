@@ -91,11 +91,31 @@ jobs:
               run: uv run -- mypy .
 
     # yamllint disable-line rule:key-ordering
-    pre-commit:
-        if: github.event_name != 'pull_request'
+    pre-commit-PUSH:
+        if: github.event_name == 'push'
+        name: pre-commit (push)
         uses: ./.github/workflows/autofix-pre-commit.yaml
         with:
             skip-autofix: true
+
+    # yamllint disable-line rule:key-ordering
+    pre-commit-PULL_REQUEST:
+        if: github.event_name == 'pull_request'
+        name: pre-commit (pull_request)
+        runs-on: ubuntu-latest
+
+        steps:
+            - timeout-minutes: 15
+              uses: kachick/wait-other-jobs@v4.0.0
+              with:
+                skip-same-workflow: true
+                wait-list: |
+                    [
+                        {
+                            "workflowFile": "autofix-pre-commit.yaml",
+                            "jobName": "autofix-pre-commit"
+                        }
+                    ]
 
     # yamllint disable-line rule:key-ordering
     ruff-lint:
@@ -140,7 +160,17 @@ jobs:
             IMAGE_NAME: ${{github.repository}}
             REGISTRY: ghcr.io
         environment: publish
-        needs: [flake8, mypy, pre-commit, ruff-lint, uv-check]
+        if: |
+            always()
+            && needs.flake8.result == 'success'
+            && needs.mypy.result =='success'
+            && (
+                needs.pre-commit-PUSH.result == 'success'
+                || needs.pre-commit-PULL_REQUEST.result == 'success'
+            )
+            && needs.ruff-lint.result == 'success'
+            && needs.uv-check.result == 'success'
+        needs: [flake8, mypy, pre-commit-PUSH, pre-commit-PULL_REQUEST, ruff-lint, uv-check]
         permissions:
             attestations: write
             id-token: write
@@ -187,7 +217,7 @@ jobs:
 
     # yamllint disable-line rule:key-ordering
     release:
-        if: github.ref_type == 'tag'
+        if: always() && github.ref_type == 'tag' && needs.build-and-publish.result == 'success'
         needs: [build-and-publish]
         permissions:
             contents: write
