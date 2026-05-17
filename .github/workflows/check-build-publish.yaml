@@ -1,4 +1,4 @@
-name: Check, Build and Deploy TOML Version Finder Server
+name: Check, Build and Publish Container Image
 
 "on":
     pull_request:
