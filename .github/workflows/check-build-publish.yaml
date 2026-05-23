@@ -179,7 +179,7 @@ jobs:
 
         steps:
             - name: Log in to the Container registry
-              uses: docker/login-action@v4.1.0
+              uses: docker/login-action@v4.2.0
               with:
                 password: ${{secrets.GITHUB_TOKEN}}
                 registry: ${{env.REGISTRY}}
@@ -190,7 +190,7 @@ jobs:
 
             - id: docker-extract-metadata
               name: Extract metadata (tags, labels) for Docker
-              uses: docker/metadata-action@v6.0.0
+              uses: docker/metadata-action@v6.1.0
               with:
                 images: ${{env.REGISTRY}}/${{env.IMAGE_NAME}}
                 tags: |-
