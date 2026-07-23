@@ -195,7 +195,7 @@ jobs:
 
         steps:
             - name: Authenticate to container registry
-              uses: docker/login-action@v4.4.0
+              uses: docker/login-action@v4.5.0
               with:
                 password: ${{secrets.GITHUB_TOKEN}}
                 registry: ${{env.REGISTRY}}
