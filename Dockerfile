@@ -26,12 +26,12 @@ RUN apt-get -y update \
 LABEL org.opencontainers.image.source=https://github.com/CarrotManMatt/toml-version-finder
 LABEL org.opencontainers.image.licenses=GPL-3.0-or-later
 
-HEALTHCHECK CMD curl -f http://localhost:8000/healthcheck || exit 1
+HEALTHCHECK CMD ["curl", "-f", "http://localhost:8000/healthcheck"]
 COPY --from=builder --chown=nonroot:nonroot /app /app
 
 ENV LANG=C.UTF-8 PATH="/app/.venv/bin:$PATH"
 
-USER nonroot
+USER 999:999
 
 ENTRYPOINT [ \
     "gunicorn", \
