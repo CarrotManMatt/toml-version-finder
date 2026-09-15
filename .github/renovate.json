@@ -22,11 +22,5 @@
     ],
     "extends": [
         "github>CarrotManMatt/renovate-config"
-    ],
-    "packageRules": [
-        {
-            "allowedVersions": "< 3.14",
-            "matchDepTypes": "requires-python"
-        }
     ]
 }
