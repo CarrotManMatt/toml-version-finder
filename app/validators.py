@@ -1,18 +1,10 @@
 """Utility validator functions to ensure a value adheres to a regex specification."""
 
-import re
-from typing import TYPE_CHECKING
+__all__: Sequence[str] = ("validate_owner", "validate_package_name", "validate_repo")
 
-if TYPE_CHECKING:
-    from collections.abc import Sequence
-    from typing import Final, Literal
-
-
-__all__: Sequence[str] = (
-    "validate_owner",
-    "validate_package_name",
-    "validate_repo",
-)
+lazy import re
+lazy from collections.abc import Sequence
+lazy from typing import Final, Literal
 
 
 def _validate_value(

@@ -1,4 +1,4 @@
-FROM ghcr.io/astral-sh/uv:python3.14-trixie-slim AS builder
+FROM ghcr.io/astral-sh/uv:python3.15-trixie-slim AS builder
 
 ENV UV_COMPILE_BYTECODE=1 UV_LINK_MODE=copy
 
@@ -11,7 +11,7 @@ RUN --mount=type=cache,target=/root/.cache/uv \
 COPY LICENSE /app/
 COPY ./app /app
 
-FROM python:3.14-slim-trixie
+FROM python:3.15-slim-trixie
 
 RUN groupadd --system --gid 999 nonroot && useradd --system --gid 999 --uid 999 --create-home nonroot
 

@@ -1,19 +1,5 @@
 """Custom exception classes used throughout this project."""
 
-import abc
-from typing import TYPE_CHECKING, override
-
-from starlette.responses import JSONResponse
-from typed_classproperties import classproperty
-
-if TYPE_CHECKING:
-    from collections.abc import Mapping, Sequence
-
-    from starlette.requests import Request
-
-    from file_fetchers import BaseFileFetcher
-    from version_finders import BaseVersionFinder
-
 __all__: Sequence[str] = (
     "BaseUnknownPathParameterError",
     "BaseUnsupportedError",
@@ -23,6 +9,17 @@ __all__: Sequence[str] = (
     "UnsupportedFileFetcherError",
     "UnsupportedVersionFinderError",
 )
+
+import abc
+from typing import override
+lazy from collections.abc import Mapping, Sequence
+
+from typed_classproperties import classproperty
+lazy from starlette.requests import Request
+lazy from starlette.responses import JSONResponse
+
+lazy from file_fetchers import BaseFileFetcher
+lazy from version_finders import BaseVersionFinder
 
 
 class _BaseCustomException(Exception, abc.ABC):
@@ -49,7 +46,7 @@ class _BaseCustomException(Exception, abc.ABC):
 
     def _get_additional_details(self) -> Mapping[str, object]:
         """Create the content to be used when converting this exception to an HTTP response."""
-        return {}
+        return frozendict()
 
     @override
     def __str__(self) -> str:
@@ -116,7 +113,7 @@ class UnknownFileTypeError(BaseUnknownPathParameterError):
 
     @override
     def _get_additional_details(self) -> Mapping[str, object]:
-        return {"file_type": self.file_type}
+        return frozendict(file_type=self.file_type)
 
 
 class BaseUnsupportedError(_BaseCustomException, abc.ABC):
@@ -177,10 +174,10 @@ class UnsupportedVersionFinderError(_UnsupportedClassError["BaseVersionFinder"])
     @override
     def _get_additional_details(self) -> Mapping[str, object]:
         return (
-            {
-                "version_finder_name": self.version_finder.__name__,
-                "version_finder_class": str(self.version_finder),
-            }
+            frozendict(
+                version_finder_name=self.version_finder.__name__,
+                version_finder_class=str(self.version_finder),
+            )
             if self.version_finder is not None
             else super()._get_additional_details()
         )
@@ -214,10 +211,10 @@ class UnsupportedFileFetcherError(_UnsupportedClassError["BaseFileFetcher"]):
     @override
     def _get_additional_details(self) -> Mapping[str, object]:
         return (
-            {
-                "file_fetcher_name": self.file_fetcher.__name__,
-                "file_fetcher_class": str(self.file_fetcher),
-            }
+            frozendict(
+                version_finder_name=self.file_fetcher.__name__,
+                version_finder_class=str(self.file_fetcher),
+            )
             if self.file_fetcher is not None
             else super()._get_additional_details()
         )
@@ -263,7 +260,9 @@ class InvalidVersionFileEncodingError(InvalidVersionFileContentError):
     @override
     def _get_additional_details(self) -> Mapping[str, object]:
         return (
-            {"encoding": self.encoding} if self.encoding else super()._get_additional_details()
+            frozendict(encoding=self.encoding)
+            if self.encoding
+            else super()._get_additional_details()
         )
 
 
@@ -300,7 +299,7 @@ class MissingPackageInVersionFileError(InvalidVersionFileContentError):
     @override
     def _get_additional_details(self) -> Mapping[str, object]:
         return (
-            {"package_name": self.package_name}
+            frozendict(package_name=self.package_name)
             if self.package_name
             else super()._get_additional_details()
         )
