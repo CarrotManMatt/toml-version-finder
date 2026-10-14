@@ -1,7 +1,7 @@
 [project]  # TODO: Remove [project] table once https://github.com/astral-sh/uv/issues/8582 is completed
 name = "toml-version-finder"
 version = "1.0.0"
-requires-python = ">=3.14"
+requires-python = ">=3.15"
 
 [dependency-groups]
 dev = [
@@ -11,7 +11,7 @@ dev = [
     { include-group = "type-check" }
 ]
 deploy = ["gunicorn>=19.7", "uvicorn-worker"]
-lint-format = ["flake8-carrot>=0.1.1", "flake8-pyproject>=1.2", "ruff>=0.13"]
+lint-format = ["flake8-carrot>=0.1.1", "flake8-pyproject>=1.2", "ruff>=0.17"]
 main = [
     "aiohttp",
     "gidgethub",
@@ -21,9 +21,10 @@ main = [
     "typed_classproperties>=1.2"
 ]
 pre-commit = ["prek>=0.5.3"]
-type-check = ["mypy>=1.20"]
+type-check = ["mypy>=2.4"]
 
 [tool.flake8]
+ignore = ["CAR110"]
 select = ["CAR"]
 extend_exclude = [".venv/"]
 require_plugins = ["flake8-carrot"]
@@ -164,6 +165,9 @@ line-width = 95
 
 [tool.uv]
 default-groups = ["dev", "main"]
+no-binary-package = [
+    "pyyaml"  # TODO: Remove building PyYAML from source once they start publishing 3.15 wheels to PyPI (https://github.com/yaml/pyyaml/issues/951)
+]
 no-build = true
 package = false
 required-version = ">=0.6.10"

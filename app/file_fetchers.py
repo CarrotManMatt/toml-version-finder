@@ -1,26 +1,20 @@
 """File fetchers which can retrieve a selected file from a known location."""
 
+__all__: Sequence[str] = ("BaseFileFetcher", "GitHubFileFetcher")
+
 import abc
-import base64
 from typing import TYPE_CHECKING, override
+lazy import base64
+lazy from collections.abc import Sequence
+lazy from pathlib import PurePosixPath
+lazy from typing import Final, TypedDict
 
-import aiohttp
-from gidgethub.aiohttp import GitHubAPI
+lazy import aiohttp
+lazy from gidgethub.aiohttp import GitHubAPI
 
-import config
-from exceptions import InvalidVersionFileContentError, InvalidVersionFileEncodingError
-from validators import validate_owner, validate_repo
-
-if TYPE_CHECKING:
-    from collections.abc import Sequence
-    from pathlib import PurePosixPath
-    from typing import Final, TypedDict
-
-
-__all__: Sequence[str] = (
-    "BaseFileFetcher",
-    "GitHubFileFetcher",
-)
+lazy import config
+lazy from exceptions import InvalidVersionFileContentError, InvalidVersionFileEncodingError
+lazy from validators import validate_owner, validate_repo
 
 
 class BaseFileFetcher(abc.ABC):

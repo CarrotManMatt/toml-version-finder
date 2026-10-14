@@ -1,13 +1,21 @@
 """Package version finders which can parse from lock or PEP621 files."""
 
+__all__: Sequence[str] = (
+    "BaseVersionFinder",
+    "PEP751VersionFinder",
+    "PoetryVersionFinder",
+    "UVVersionFinder",
+)
+
 import abc
-import re
-import tomllib
-from collections.abc import Iterable, Mapping
 from enum import Enum
-from pathlib import PurePosixPath
-from tomllib import TOMLDecodeError
-from typing import TYPE_CHECKING, cast, final, override
+from typing import final, override
+lazy import re
+lazy import tomllib
+lazy from collections.abc import Iterable, Mapping, Sequence
+lazy from pathlib import PurePosixPath
+lazy from tomllib import TOMLDecodeError
+lazy from typing import Final, Self
 
 from packaging.requirements import Requirement
 from typed_classproperties import classproperty
@@ -20,20 +28,7 @@ from exceptions import (
 )
 from file_fetchers import GitHubFileFetcher
 from validators import validate_package_name
-
-if TYPE_CHECKING:
-    from collections.abc import Sequence
-    from typing import Final, Self
-
-    from file_fetchers import BaseFileFetcher
-
-
-__all__: Sequence[str] = (
-    "BaseVersionFinder",
-    "PEP751VersionFinder",
-    "PoetryVersionFinder",
-    "UVVersionFinder",
-)
+lazy from file_fetchers import BaseFileFetcher
 
 
 class BaseVersionFinder(abc.ABC):
@@ -61,7 +56,7 @@ class BaseVersionFinder(abc.ABC):
     def _convert_toml(cls, raw_toml: str) -> Mapping[str, object]:
         toml_decode_error: TOMLDecodeError
         try:
-            return tomllib.loads(raw_toml)
+            return frozendict(tomllib.loads(raw_toml))
         except TOMLDecodeError as toml_decode_error:
             raise InvalidVersionFileContentError from toml_decode_error
 
@@ -104,9 +99,7 @@ class BaseVersionFinder(abc.ABC):
         if project_contents is None or not isinstance(project_contents, Mapping):
             raise InvalidVersionFileContentError
 
-        dependencies: object | None = cast("Mapping[str, object]", project_contents).get(
-            "dependencies", None
-        )
+        dependencies: object | None = project_contents.get("dependencies", None)
 
         if dependencies is None or not isinstance(dependencies, Iterable):
             raise InvalidVersionFileContentError
@@ -181,9 +174,7 @@ class PoetryVersionFinder(BaseVersionFinder):
             if not isinstance(current_package, Mapping):
                 continue
 
-            current_package_name: object | None = cast(
-                "Mapping[str, object]", current_package
-            ).get("name", None)
+            current_package_name: object | None = current_package.get("name", None)
 
             if (
                 current_package_name is None
@@ -192,9 +183,7 @@ class PoetryVersionFinder(BaseVersionFinder):
             ):
                 continue
 
-            current_package_version: object | None = cast(
-                "Mapping[str, object]", current_package
-            ).get("version", None)
+            current_package_version: object | None = current_package.get("version", None)
 
             if current_package_version is None or not isinstance(current_package_version, str):
                 raise InvalidVersionFileContentError

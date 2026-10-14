@@ -1,38 +1,34 @@
 """Primary HTTP response generation functionality."""
 
-import re
-from typing import TYPE_CHECKING, override
+__all__: Sequence[str] = ("app",)
+
+from typing import override
+lazy import re
+lazy from collections.abc import Mapping, Sequence
+lazy from typing import Final
 
 import aiohttp
 import gidgethub
-from gidgethub.aiohttp import GitHubAPI
 from starlette.applications import Starlette
-from starlette.responses import JSONResponse, RedirectResponse
+from starlette.responses import JSONResponse
 from starlette.routing import Route
 from starlette.schemas import SchemaGenerator
+lazy from gidgethub.aiohttp import GitHubAPI
+lazy from starlette.requests import Request
+lazy from starlette.responses import RedirectResponse, Response
 
 import config
-import version_finders
 from exceptions import (
     BaseUnknownPathParameterError,
     BaseUnsupportedError,
     InvalidVersionFileContentError,
 )
-from validators import (
+lazy import version_finders
+lazy from validators import (
     validate_owner,
     validate_package_name,
     validate_repo,
 )
-
-if TYPE_CHECKING:
-    from collections.abc import Mapping, Sequence
-    from typing import Final
-
-    from starlette.requests import Request
-    from starlette.responses import Response
-
-
-__all__: Sequence[str] = ("app",)
 
 
 def _version_file_from_url(
