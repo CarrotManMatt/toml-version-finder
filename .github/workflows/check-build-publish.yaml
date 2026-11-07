@@ -90,7 +90,7 @@ jobs:
               run: uv sync --no-group dev --group type-check
 
             - name: Run ty check
-              run: uv run -- ty check --no-fix --output-format=github
+              run: uv run -- ty check --output-format=github
 
     pre-commit-PUSH:  # yamllint disable-line rule:key-ordering
         if: github.event_name != 'pull_request'
