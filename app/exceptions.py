@@ -25,7 +25,6 @@ lazy from version_finders import BaseVersionFinder
 class _BaseCustomException(Exception, abc.ABC):
     """Base custom exception class that can be converted to an HTTP response."""
 
-    @override
     def __init__(self, message: str | None = None) -> None:
         self.message: str = (
             message.strip() if message is not None else message
@@ -93,7 +92,6 @@ class BaseUnknownPathParameterError(_BaseCustomException, ValueError, abc.ABC):
 class UnknownFileTypeError(BaseUnknownPathParameterError):
     """The selected 'file_type' is not a valid value."""
 
-    @override
     def __init__(self, message: str | None = None, file_type: str | None = None) -> None:
         super().__init__(message=message, unknown_value=file_type)
 
@@ -128,9 +126,7 @@ class BaseUnsupportedError(_BaseCustomException, abc.ABC):
 class _UnsupportedClassError[T](BaseUnsupportedError, abc.ABC):
     @override
     def __init__(
-        self,
-        message: str | None = None,
-        unsupported_class: type[T] | None = None,
+        self, message: str | None = None, unsupported_class: type[T] | None = None
     ) -> None:
         self._unsupported_class: type[T] | None = unsupported_class
         del unsupported_class
@@ -149,11 +145,8 @@ class _UnsupportedClassError[T](BaseUnsupportedError, abc.ABC):
 class UnsupportedVersionFinderError(_UnsupportedClassError["BaseVersionFinder"]):
     """The selected VersionFinder implementation is not supported."""
 
-    @override
     def __init__(
-        self,
-        message: str | None = None,
-        version_finder: type[BaseVersionFinder] | None = None,
+        self, message: str | None = None, version_finder: type[BaseVersionFinder] | None = None
     ) -> None:
         super().__init__(message=message, unsupported_class=version_finder)
 
@@ -186,11 +179,8 @@ class UnsupportedVersionFinderError(_UnsupportedClassError["BaseVersionFinder"])
 class UnsupportedFileFetcherError(_UnsupportedClassError["BaseFileFetcher"]):
     """The selected FileFetcher implementation is not supported."""
 
-    @override
     def __init__(
-        self,
-        message: str | None = None,
-        file_fetcher: type[BaseFileFetcher] | None = None,
+        self, message: str | None = None, file_fetcher: type[BaseFileFetcher] | None = None
     ) -> None:
         super().__init__(message=message, unsupported_class=file_fetcher)
 
@@ -275,9 +265,7 @@ class MissingPackageInVersionFileError(InvalidVersionFileContentError):
             package_name.strip() if package_name is not None else package_name
         )
         del package_name
-        self._used_default_message: bool = not (
-            message.strip() if message is not None else message
-        )
+        self._used_default_message: bool = not message.strip() if message is not None else True
 
         super().__init__(message=message)
 

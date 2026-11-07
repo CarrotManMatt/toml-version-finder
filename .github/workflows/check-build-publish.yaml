@@ -62,12 +62,12 @@ jobs:
             - name: Run Flake8
               run: uv run -- flake8
 
-    mypy:  # yamllint disable-line rule:key-ordering
+    ty:  # yamllint disable-line rule:key-ordering
         env:
             UV_FROZEN: "true"
             UV_NO_SYNC: "true"
             UV_PYTHON_DOWNLOADS: never
-        name: Type-check code with mypy
+        name: Type-check code with ty
         needs: [uv-check]
         runs-on: ubuntu-latest
 
@@ -86,21 +86,11 @@ jobs:
               with:
                 enable-cache: true
 
-            - name: Install mypy from locked dependencies
+            - name: Install ty from locked dependencies
               run: uv sync --no-group dev --group type-check
 
-            - id: store-hashed-python-version
-              name: Store hashed Python version
-              run: echo "hashed_python_version=$(uv run -- python -VV | sha256sum | cut -d' ' -f1)"
-                >> "$GITHUB_OUTPUT"
-
-            - uses: actions/cache@v6
-              with:
-                key: mypy|${{steps.store-hashed-python-version.outputs.hashed_python_version}}
-                path: ./.mypy_cache
-
-            - name: Run mypy
-              run: uv run -- mypy .
+            - name: Run ty check
+              run: uv run -- ty check --no-fix --output-format=github
 
     pre-commit-PUSH:  # yamllint disable-line rule:key-ordering
         if: github.event_name != 'pull_request'
@@ -176,7 +166,7 @@ jobs:
         if: |
             always()
             && needs.flake8.result == 'success'
-            && needs.mypy.result =='success'
+            && needs.ty.result =='success'
             && (
                 needs.pre-commit-PUSH.result == 'success'
                 || needs.pre-commit-PULL_REQUEST.result == 'success'
@@ -185,7 +175,7 @@ jobs:
             && needs.uv-check.result == 'success'
 
         name: Build and publish Docker image
-        needs: [flake8, mypy, pre-commit-PUSH, pre-commit-PULL_REQUEST, ruff-lint, uv-check]
+        needs: [flake8, ty, pre-commit-PUSH, pre-commit-PULL_REQUEST, ruff-lint, uv-check]
         permissions:
             artifact-metadata: write  # Needed to correctly publish release artefacts
             attestations: write  # Needed to correctly publish container image attestations

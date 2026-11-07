@@ -34,7 +34,6 @@ class GitHubFileFetcher(BaseFileFetcher):
             encoding: str
             content: object
 
-    @override
     def __init__(self, *, owner: str, repo: str) -> None:
         validate_owner(owner)
         self._owner: str = owner

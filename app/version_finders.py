@@ -34,7 +34,6 @@ lazy from file_fetchers import BaseFileFetcher
 class BaseVersionFinder(abc.ABC):
     """Core functionality for version finder implementation classes."""
 
-    @override
     def __init__(
         self,
         *,

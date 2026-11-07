@@ -21,50 +21,13 @@ main = [
     "typed_classproperties>=1.2"
 ]
 pre-commit = ["prek>=0.5.3"]
-type-check = ["mypy>=2.4"]
+type-check = ["ty>=0.0.99"]
 
 [tool.flake8]
-ignore = ["CAR110"]
+ignore = ["CAR110", "CAR163"]
 select = ["CAR"]
 extend_exclude = [".venv/"]
 require_plugins = ["flake8-carrot"]
-
-[tool.mypy]
-check_untyped_defs = true
-disallow_any_decorated = true
-disallow_any_explicit = true
-disallow_any_generics = true
-disallow_any_unimported = true
-disallow_incomplete_defs = true
-disallow_subclassing_any = true
-disallow_untyped_calls = true
-disallow_untyped_decorators = true
-disallow_untyped_defs = true
-enable_error_code = [
-    "deprecated",
-    "explicit-override",
-    "ignore-without-code",
-    "mutable-override",
-    "narrowed-type-not-subtype",
-    "possibly-undefined",
-    "redundant-expr",
-    "redundant-self",
-    "truthy-bool",
-    "truthy-iterable",
-    "unused-awaitable"
-]
-extra_checks = true
-local_partial_types = true
-no_implicit_reexport = true
-strict_bytes = true
-strict_equality = true
-strict_equality_for_none = true
-warn_redundant_casts = true
-warn_return_any = true
-warn_unreachable = true
-warn_unused_configs = true
-warn_unused_ignores = true
-warn_incomplete_stub = true
 
 [tool.ruff]
 indent-width = 4
@@ -84,6 +47,7 @@ ignore = [
     "COM812",
     "COM819",
     "CPY",
+    "D107",
     "D206",
     "D212",
     "FA",
@@ -162,6 +126,10 @@ keep-runtime-typing = true
 [tool.tombi.format.rules]
 indent-width = 4
 line-width = 95
+
+[tool.ty.rules]
+redundant-cast = "error"
+unused-ignore-comment = "error"
 
 [tool.uv]
 default-groups = ["dev", "main"]

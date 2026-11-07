@@ -2,7 +2,6 @@
 
 __all__: Sequence[str] = ("app",)
 
-from typing import override
 lazy import re
 lazy from collections.abc import Mapping, Sequence
 lazy from typing import Final
@@ -66,7 +65,6 @@ def _parse_value_from_path_params(
 
 
 class _TOMLFindVersionEndpoint:
-    @override
     def __init__(self, file_type: str) -> None:
         self.file_type: str = file_type
 
