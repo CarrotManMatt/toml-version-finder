@@ -7,7 +7,7 @@ from typing import TYPE_CHECKING, override
 lazy import base64
 lazy from collections.abc import Sequence
 lazy from pathlib import PurePosixPath
-lazy from typing import Final, TypedDict
+lazy from typing import Final, TypedDict, cast
 
 lazy import aiohttp
 lazy from gidgethub.aiohttp import GitHubAPI
@@ -54,8 +54,11 @@ class GitHubFileFetcher(BaseFileFetcher):
             github_client: GitHubAPI = GitHubAPI(
                 session, f"{self.owner}/{self.repo}", oauth_token=str(config.GITHUB_API_KEY)
             )
-            response: GitHubFileFetcher._GitHubAPIResponse = await github_client.getitem(
-                f"/repos/{self.owner}/{self.repo}/contents/{str(content_file).removeprefix('/')}"
+            response: GitHubFileFetcher._GitHubAPIResponse = cast(
+                "GitHubFileFetcher._GitHubAPIResponse",
+                await github_client.getitem(
+                    f"/repos/{self.owner}/{self.repo}/contents/{str(content_file).removeprefix('/')}"
+                ),
             )
 
         if response["encoding"] != "base64":

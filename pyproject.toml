@@ -127,8 +127,27 @@ keep-runtime-typing = true
 indent-width = 4
 line-width = 95
 
+[tool.ty.environment]
+root = ["app/"]
+
 [tool.ty.rules]
+blanket-ignore-comment = "error"
+disjoint-cast = "error"
+division-by-zero = "error"
+dynamic-function-decorator-return = "error"
+mismatched-sentinel-name = "warn"
+missing-direct-dependency = "error"
+missing-override-decorator = "error"
+missing-type-argument = "error"
+possibly-missing-attribute = "error"
+possibly-missing-import = "error"
+possibly-unresolved-reference = "error"
 redundant-cast = "error"
+redundant-condition-strict = "error"
+unsound-assignment = "error"
+unsound-return-statement = "error"
+unsound-yield = "error"
+unsupported-dynamic-base = "error"
 unused-ignore-comment = "error"
 
 [tool.uv]

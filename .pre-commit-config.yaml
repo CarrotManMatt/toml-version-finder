@@ -128,6 +128,12 @@ repos:
           args: [--fix]
         - id: ruff-format
 
+    - repo: https://github.com/astral-sh/ty-pre-commit
+      rev: v0.0.99
+      hooks:
+        - id: ty
+          args: [--fix]
+
     - repo: https://github.com/pycqa/flake8
       rev: 7.5.0
       hooks:

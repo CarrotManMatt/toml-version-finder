@@ -13,6 +13,7 @@ __all__: Sequence[str] = (
 import abc
 from typing import override
 lazy from collections.abc import Mapping, Sequence
+lazy from typing import cast
 
 from typed_classproperties import classproperty
 lazy from starlette.requests import Request
@@ -45,7 +46,7 @@ class _BaseCustomException(Exception, abc.ABC):
 
     def _get_additional_details(self) -> Mapping[str, object]:
         """Create the content to be used when converting this exception to an HTTP response."""
-        return frozendict()
+        return cast("frozendict[str, object]", frozendict())
 
     @override
     def __str__(self) -> str:
